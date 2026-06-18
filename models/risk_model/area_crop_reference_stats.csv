@@ -1,0 +1,599 @@
+area,item,area_crop_rainfall_median,area_crop_temp_median
+Albania,Maize,1485.0,16.45
+Albania,Potatoes,1485.0,16.45
+Albania,"Rice, paddy",1485.0,16.055
+Albania,Sorghum,1485.0,16.06
+Albania,Soybeans,1485.0,16.45
+Albania,Wheat,1485.0,16.45
+Algeria,Maize,89.0,17.59
+Algeria,Potatoes,89.0,17.59
+Algeria,"Rice, paddy",89.0,17.59
+Algeria,Sorghum,89.0,17.57
+Algeria,Wheat,89.0,17.59
+Angola,Cassava,1010.0,24.24
+Angola,Maize,1010.0,24.24
+Angola,Potatoes,1010.0,24.24
+Angola,"Rice, paddy",1010.0,24.24
+Angola,Sorghum,1010.0,24.33
+Angola,Soybeans,1010.0,24.33
+Angola,Sweet potatoes,1010.0,24.24
+Angola,Wheat,1010.0,24.24
+Argentina,Cassava,591.0,17.69
+Argentina,Maize,591.0,17.69
+Argentina,Potatoes,591.0,17.69
+Argentina,"Rice, paddy",591.0,17.69
+Argentina,Sorghum,591.0,17.69
+Argentina,Soybeans,591.0,17.69
+Argentina,Sweet potatoes,591.0,17.69
+Argentina,Wheat,591.0,17.69
+Armenia,Maize,562.0,9.58
+Armenia,Potatoes,562.0,9.58
+Armenia,Wheat,562.0,9.58
+Australia,Maize,534.0,17.2
+Australia,Potatoes,534.0,17.2
+Australia,"Rice, paddy",534.0,17.2
+Australia,Sorghum,534.0,17.2
+Australia,Soybeans,534.0,17.2
+Australia,Sweet potatoes,534.0,17.2
+Australia,Wheat,534.0,17.2
+Austria,Maize,1110.0,9.17
+Austria,Potatoes,1110.0,9.17
+Austria,Sorghum,1110.0,9.42
+Austria,Soybeans,1110.0,9.17
+Austria,Wheat,1110.0,9.17
+Azerbaijan,Maize,447.0,12.66
+Azerbaijan,Potatoes,447.0,12.66
+Azerbaijan,"Rice, paddy",447.0,12.66
+Azerbaijan,Sorghum,447.0,12.455
+Azerbaijan,Soybeans,447.0,12.7
+Azerbaijan,Wheat,447.0,12.66
+Bahamas,Cassava,1292.0,25.46
+Bahamas,Maize,1292.0,25.46
+Bahamas,Plantains and others,1292.0,25.61
+Bahamas,Sweet potatoes,1292.0,25.46
+Bahrain,Potatoes,83.0,27.01
+Bahrain,Sweet potatoes,83.0,26.134999999999998
+Bangladesh,Maize,2666.0,26.09
+Bangladesh,Potatoes,2666.0,26.09
+Bangladesh,"Rice, paddy",2666.0,26.09
+Bangladesh,Sorghum,2666.0,26.09
+Bangladesh,Soybeans,2666.0,26.28
+Bangladesh,Sweet potatoes,2666.0,26.09
+Bangladesh,Wheat,2666.0,26.09
+Belarus,Maize,618.0,6.71
+Belarus,Potatoes,618.0,6.71
+Belarus,Wheat,618.0,6.71
+Belgium,Maize,847.0,11.0
+Belgium,Potatoes,847.0,11.0
+Belgium,Wheat,847.0,11.0
+Botswana,Maize,416.0,19.54
+Botswana,Sorghum,416.0,19.54
+Botswana,Wheat,416.0,19.585
+Brazil,Cassava,1761.0,21.91
+Brazil,Maize,1761.0,21.91
+Brazil,Potatoes,1761.0,21.91
+Brazil,"Rice, paddy",1761.0,21.91
+Brazil,Sorghum,1761.0,21.91
+Brazil,Soybeans,1761.0,21.91
+Brazil,Sweet potatoes,1761.0,21.91
+Brazil,Wheat,1761.0,21.91
+Brazil,Yams,1761.0,21.91
+Bulgaria,Maize,608.0,9.51
+Bulgaria,Potatoes,608.0,9.51
+Bulgaria,"Rice, paddy",608.0,9.51
+Bulgaria,Sorghum,608.0,9.51
+Bulgaria,Soybeans,608.0,9.51
+Bulgaria,Wheat,608.0,9.51
+Burkina Faso,Cassava,748.0,28.77
+Burkina Faso,Maize,748.0,28.77
+Burkina Faso,Potatoes,748.0,28.77
+Burkina Faso,"Rice, paddy",748.0,28.77
+Burkina Faso,Sorghum,748.0,28.77
+Burkina Faso,Soybeans,748.0,28.77
+Burkina Faso,Sweet potatoes,748.0,28.77
+Burkina Faso,Yams,748.0,28.77
+Burundi,Cassava,1274.0,21.32
+Burundi,Maize,1274.0,21.32
+Burundi,Potatoes,1274.0,21.32
+Burundi,"Rice, paddy",1274.0,21.32
+Burundi,Sorghum,1274.0,21.32
+Burundi,Soybeans,1274.0,21.32
+Burundi,Sweet potatoes,1274.0,21.32
+Burundi,Wheat,1274.0,21.32
+Burundi,Yams,1274.0,21.32
+Cameroon,Cassava,1604.0,25.21
+Cameroon,Maize,1604.0,25.21
+Cameroon,Plantains and others,1604.0,25.21
+Cameroon,Potatoes,1604.0,25.21
+Cameroon,"Rice, paddy",1604.0,25.21
+Cameroon,Sorghum,1604.0,25.21
+Cameroon,Soybeans,1604.0,25.21
+Cameroon,Sweet potatoes,1604.0,25.21
+Cameroon,Wheat,1604.0,25.21
+Cameroon,Yams,1604.0,25.21
+Canada,Maize,537.0,7.3
+Canada,Potatoes,537.0,7.3
+Canada,Soybeans,537.0,7.3
+Canada,Wheat,537.0,7.3
+Central African Republic,Cassava,1342.0,25.45
+Central African Republic,Maize,1342.0,25.45
+Central African Republic,Plantains and others,1342.0,25.45
+Central African Republic,Potatoes,1342.0,25.45
+Central African Republic,"Rice, paddy",1342.0,25.45
+Central African Republic,Sorghum,1342.0,25.45
+Central African Republic,Yams,1342.0,25.45
+Chile,Maize,1522.0,9.575
+Chile,Potatoes,1522.0,9.575
+Chile,"Rice, paddy",1522.0,9.575
+Chile,Sweet potatoes,1522.0,9.575
+Chile,Wheat,1522.0,9.575
+Colombia,Cassava,3240.0,24.92
+Colombia,Maize,3240.0,24.92
+Colombia,Plantains and others,3240.0,24.92
+Colombia,Potatoes,3240.0,24.92
+Colombia,"Rice, paddy",3240.0,24.92
+Colombia,Sorghum,3240.0,24.92
+Colombia,Soybeans,3240.0,24.92
+Colombia,Wheat,3240.0,24.92
+Colombia,Yams,3240.0,24.92
+Croatia,Maize,1113.0,10.74
+Croatia,Potatoes,1113.0,10.74
+Croatia,Sorghum,1113.0,10.74
+Croatia,Soybeans,1113.0,10.74
+Croatia,Wheat,1113.0,10.74
+Denmark,Maize,703.0,8.754999999999999
+Denmark,Potatoes,703.0,9.11
+Denmark,Wheat,703.0,9.11
+Dominican Republic,Cassava,1410.0,26.785
+Dominican Republic,Maize,1410.0,26.785
+Dominican Republic,Plantains and others,1410.0,26.785
+Dominican Republic,Potatoes,1410.0,26.785
+Dominican Republic,"Rice, paddy",1410.0,26.785
+Dominican Republic,Sorghum,1410.0,26.785
+Dominican Republic,Sweet potatoes,1410.0,26.785
+Dominican Republic,Yams,1410.0,26.785
+Ecuador,Cassava,2274.0,21.78
+Ecuador,Maize,2274.0,21.78
+Ecuador,Plantains and others,2274.0,21.78
+Ecuador,Potatoes,2274.0,21.78
+Ecuador,"Rice, paddy",2274.0,21.78
+Ecuador,Sorghum,2274.0,21.78
+Ecuador,Soybeans,2274.0,21.78
+Ecuador,Sweet potatoes,2274.0,21.78
+Ecuador,Wheat,2274.0,21.78
+Egypt,Maize,51.0,21.555
+Egypt,Potatoes,51.0,21.555
+Egypt,"Rice, paddy",51.0,21.555
+Egypt,Sorghum,51.0,21.555
+Egypt,Soybeans,51.0,21.555
+Egypt,Sweet potatoes,51.0,21.555
+Egypt,Wheat,51.0,21.555
+El Salvador,Cassava,1784.0,26.07
+El Salvador,Maize,1784.0,26.07
+El Salvador,Plantains and others,1784.0,26.07
+El Salvador,Potatoes,1784.0,26.07
+El Salvador,"Rice, paddy",1784.0,26.07
+El Salvador,Sorghum,1784.0,26.07
+El Salvador,Soybeans,1784.0,26.07
+El Salvador,Sweet potatoes,1784.0,26.07
+Eritrea,Maize,383.0,24.770000000000003
+Eritrea,Potatoes,383.0,24.770000000000003
+Eritrea,Sorghum,383.0,24.770000000000003
+Eritrea,Wheat,383.0,24.770000000000003
+Estonia,Potatoes,626.0,6.14
+Estonia,Wheat,626.0,6.14
+Finland,Potatoes,536.0,5.62
+Finland,Wheat,536.0,5.62
+France,Maize,867.0,11.46
+France,Potatoes,867.0,11.46
+France,"Rice, paddy",867.0,11.46
+France,Sorghum,867.0,11.46
+France,Soybeans,867.0,11.46
+France,Wheat,867.0,11.46
+Germany,Maize,700.0,9.31
+Germany,Potatoes,700.0,9.31
+Germany,Soybeans,700.0,9.27
+Germany,Wheat,700.0,9.31
+Ghana,Cassava,1187.0,26.87
+Ghana,Maize,1187.0,26.87
+Ghana,Plantains and others,1187.0,26.87
+Ghana,"Rice, paddy",1187.0,26.87
+Ghana,Sorghum,1187.0,26.87
+Ghana,Sweet potatoes,1187.0,27.02
+Ghana,Yams,1187.0,26.87
+Greece,Maize,652.0,18.15
+Greece,Potatoes,652.0,18.15
+Greece,"Rice, paddy",652.0,18.15
+Greece,Sorghum,652.0,18.15
+Greece,Soybeans,652.0,18.15
+Greece,Sweet potatoes,652.0,18.15
+Greece,Wheat,652.0,18.15
+Guatemala,Cassava,1996.0,19.88
+Guatemala,Maize,1996.0,19.88
+Guatemala,Plantains and others,1996.0,19.88
+Guatemala,Potatoes,1996.0,19.88
+Guatemala,"Rice, paddy",1996.0,19.88
+Guatemala,Sorghum,1996.0,19.88
+Guatemala,Soybeans,1996.0,19.88
+Guatemala,Sweet potatoes,1996.0,19.88
+Guatemala,Wheat,1996.0,19.88
+Guinea,Cassava,1651.0,27.29
+Guinea,Maize,1651.0,27.29
+Guinea,Plantains and others,1651.0,27.29
+Guinea,Potatoes,1651.0,27.44
+Guinea,"Rice, paddy",1651.0,27.29
+Guinea,Sorghum,1651.0,27.29
+Guinea,Sweet potatoes,1651.0,27.29
+Guinea,Yams,1651.0,27.29
+Guyana,Cassava,2387.0,27.3
+Guyana,Maize,2387.0,27.3
+Guyana,Plantains and others,2387.0,27.3
+Guyana,"Rice, paddy",2387.0,27.3
+Guyana,Sweet potatoes,2387.0,27.365000000000002
+Guyana,Yams,2387.0,27.365000000000002
+Haiti,Cassava,1440.0,27.2
+Haiti,Maize,1440.0,27.2
+Haiti,Plantains and others,1440.0,27.2
+Haiti,Potatoes,1440.0,27.2
+Haiti,"Rice, paddy",1440.0,27.2
+Haiti,Sorghum,1440.0,27.2
+Haiti,Sweet potatoes,1440.0,27.2
+Haiti,Yams,1440.0,27.2
+Honduras,Cassava,1976.0,24.61
+Honduras,Maize,1976.0,24.61
+Honduras,Plantains and others,1976.0,24.61
+Honduras,Potatoes,1976.0,24.61
+Honduras,"Rice, paddy",1976.0,24.61
+Honduras,Sorghum,1976.0,24.61
+Honduras,Soybeans,1976.0,24.619999999999997
+Honduras,Sweet potatoes,1976.0,24.61
+Honduras,Wheat,1976.0,24.61
+Hungary,Maize,589.0,10.67
+Hungary,Potatoes,589.0,10.67
+Hungary,"Rice, paddy",589.0,10.67
+Hungary,Sorghum,589.0,10.67
+Hungary,Soybeans,589.0,10.67
+Hungary,Wheat,589.0,10.67
+India,Cassava,1083.0,25.98
+India,Maize,1083.0,25.98
+India,Potatoes,1083.0,25.98
+India,"Rice, paddy",1083.0,25.98
+India,Sorghum,1083.0,25.98
+India,Soybeans,1083.0,25.98
+India,Sweet potatoes,1083.0,25.98
+India,Wheat,1083.0,25.98
+Indonesia,Cassava,2702.0,27.18
+Indonesia,Maize,2702.0,27.18
+Indonesia,Potatoes,2702.0,27.18
+Indonesia,"Rice, paddy",2702.0,27.18
+Indonesia,Soybeans,2702.0,27.18
+Indonesia,Sweet potatoes,2702.0,27.18
+Iraq,Maize,216.0,21.869999999999997
+Iraq,Potatoes,216.0,21.869999999999997
+Iraq,"Rice, paddy",216.0,21.869999999999997
+Iraq,Sorghum,216.0,21.869999999999997
+Iraq,Soybeans,216.0,21.869999999999997
+Iraq,Wheat,216.0,21.869999999999997
+Ireland,Potatoes,1118.0,9.47
+Ireland,Wheat,1118.0,9.47
+Italy,Maize,832.0,10.365
+Italy,Potatoes,832.0,10.365
+Italy,"Rice, paddy",832.0,10.365
+Italy,Sorghum,832.0,10.365
+Italy,Soybeans,832.0,10.365
+Italy,Sweet potatoes,832.0,10.365
+Italy,Wheat,832.0,10.365
+Jamaica,Cassava,2051.0,27.34
+Jamaica,Maize,2051.0,27.34
+Jamaica,Plantains and others,2051.0,27.34
+Jamaica,Potatoes,2051.0,27.34
+Jamaica,"Rice, paddy",2051.0,27.34
+Jamaica,Sweet potatoes,2051.0,27.34
+Jamaica,Yams,2051.0,27.34
+Japan,Maize,1668.0,15.415
+Japan,Potatoes,1668.0,15.415
+Japan,"Rice, paddy",1668.0,15.415
+Japan,Soybeans,1668.0,15.415
+Japan,Sweet potatoes,1668.0,15.415
+Japan,Wheat,1668.0,15.415
+Japan,Yams,1668.0,15.415
+Kazakhstan,Maize,250.0,5.5
+Kazakhstan,Potatoes,250.0,5.5
+Kazakhstan,"Rice, paddy",250.0,5.5
+Kazakhstan,Sorghum,250.0,5.5
+Kazakhstan,Soybeans,250.0,5.5
+Kazakhstan,Wheat,250.0,5.5
+Kenya,Cassava,630.0,16.66
+Kenya,Maize,630.0,16.66
+Kenya,Plantains and others,630.0,16.66
+Kenya,Potatoes,630.0,16.66
+Kenya,"Rice, paddy",630.0,16.66
+Kenya,Sorghum,630.0,16.66
+Kenya,Soybeans,630.0,16.66
+Kenya,Sweet potatoes,630.0,16.66
+Kenya,Wheat,630.0,16.66
+Kenya,Yams,630.0,16.66
+Latvia,Potatoes,641.0,6.51
+Latvia,Wheat,641.0,6.51
+Lebanon,Maize,661.0,19.72
+Lebanon,Potatoes,661.0,19.72
+Lebanon,Sorghum,661.0,19.72
+Lebanon,Wheat,661.0,19.72
+Lesotho,Maize,788.0,14.62
+Lesotho,Potatoes,788.0,14.62
+Lesotho,Sorghum,788.0,14.62
+Lesotho,Wheat,788.0,14.62
+Libya,Maize,56.0,20.105
+Libya,Potatoes,56.0,20.105
+Libya,Wheat,56.0,20.105
+Lithuania,Maize,656.0,6.7
+Lithuania,Potatoes,656.0,6.7
+Lithuania,Wheat,656.0,6.7
+Madagascar,Cassava,1513.0,19.96
+Madagascar,Maize,1513.0,19.96
+Madagascar,Potatoes,1513.0,19.96
+Madagascar,"Rice, paddy",1513.0,19.96
+Madagascar,Sorghum,1513.0,19.96
+Madagascar,Soybeans,1513.0,19.96
+Madagascar,Sweet potatoes,1513.0,19.96
+Madagascar,Wheat,1513.0,19.96
+Malawi,Cassava,1181.0,20.62
+Malawi,Maize,1181.0,20.62
+Malawi,Plantains and others,1181.0,20.62
+Malawi,Potatoes,1181.0,20.62
+Malawi,"Rice, paddy",1181.0,20.62
+Malawi,Sorghum,1181.0,20.62
+Malawi,Soybeans,1181.0,20.65
+Malawi,Wheat,1181.0,20.62
+Malaysia,Cassava,2875.0,27.24
+Malaysia,Maize,2875.0,27.24
+Malaysia,"Rice, paddy",2875.0,27.24
+Malaysia,Soybeans,2875.0,27.21
+Malaysia,Sweet potatoes,2875.0,27.24
+Mali,Cassava,282.0,27.62
+Mali,Maize,282.0,27.62
+Mali,Potatoes,282.0,27.62
+Mali,"Rice, paddy",282.0,27.62
+Mali,Sorghum,282.0,27.62
+Mali,Soybeans,282.0,27.62
+Mali,Sweet potatoes,282.0,27.62
+Mali,Wheat,282.0,27.62
+Mali,Yams,282.0,27.62
+Mauritania,Maize,92.0,27.82
+Mauritania,Potatoes,92.0,27.82
+Mauritania,"Rice, paddy",92.0,27.82
+Mauritania,Sorghum,92.0,27.82
+Mauritania,Sweet potatoes,92.0,27.82
+Mauritania,Wheat,92.0,27.82
+Mauritania,Yams,92.0,27.82
+Mauritius,Cassava,2041.0,24.19
+Mauritius,Maize,2041.0,24.19
+Mauritius,Potatoes,2041.0,24.19
+Mauritius,"Rice, paddy",2041.0,24.31
+Mauritius,Sweet potatoes,2041.0,24.19
+Mexico,Cassava,758.0,20.86
+Mexico,Maize,758.0,20.86
+Mexico,Potatoes,758.0,20.86
+Mexico,"Rice, paddy",758.0,20.86
+Mexico,Sorghum,758.0,20.86
+Mexico,Soybeans,758.0,20.86
+Mexico,Sweet potatoes,758.0,20.86
+Mexico,Wheat,758.0,20.86
+Montenegro,Maize,241.0,11.495000000000001
+Montenegro,Potatoes,241.0,11.495000000000001
+Montenegro,Wheat,241.0,11.495000000000001
+Morocco,Maize,346.0,18.195
+Morocco,Potatoes,346.0,18.195
+Morocco,"Rice, paddy",346.0,18.195
+Morocco,Sorghum,346.0,18.195
+Morocco,Soybeans,346.0,18.195
+Morocco,Sweet potatoes,346.0,18.195
+Morocco,Wheat,346.0,18.195
+Mozambique,Cassava,1032.0,21.89
+Mozambique,Maize,1032.0,21.89
+Mozambique,Potatoes,1032.0,21.89
+Mozambique,"Rice, paddy",1032.0,21.89
+Mozambique,Sorghum,1032.0,21.89
+Mozambique,Sweet potatoes,1032.0,21.89
+Mozambique,Wheat,1032.0,21.89
+Namibia,Maize,285.0,20.37
+Namibia,Potatoes,285.0,20.37
+Namibia,Sorghum,285.0,20.37
+Namibia,Wheat,285.0,20.37
+Nepal,Maize,1500.0,15.36
+Nepal,Potatoes,1500.0,15.36
+Nepal,"Rice, paddy",1500.0,15.36
+Nepal,Soybeans,1500.0,15.36
+Nepal,Wheat,1500.0,15.36
+Netherlands,Maize,778.0,10.33
+Netherlands,Potatoes,778.0,10.33
+Netherlands,Wheat,778.0,10.33
+New Zealand,Maize,1732.0,13.28
+New Zealand,Potatoes,1732.0,13.28
+New Zealand,Sweet potatoes,1732.0,13.28
+New Zealand,Wheat,1732.0,13.28
+Nicaragua,Cassava,2280.0,27.05
+Nicaragua,Maize,2280.0,27.05
+Nicaragua,Plantains and others,2280.0,27.05
+Nicaragua,Potatoes,2280.0,27.05
+Nicaragua,"Rice, paddy",2280.0,27.05
+Nicaragua,Sorghum,2280.0,27.05
+Nicaragua,Soybeans,2280.0,27.05
+Nicaragua,Yams,2280.0,27.105
+Niger,Cassava,151.0,29.71
+Niger,Maize,151.0,29.71
+Niger,Potatoes,151.0,29.71
+Niger,"Rice, paddy",151.0,29.71
+Niger,Sorghum,151.0,29.71
+Niger,Sweet potatoes,151.0,29.71
+Niger,Wheat,151.0,29.71
+Norway,Potatoes,1414.0,3.57
+Norway,Wheat,1414.0,3.57
+Pakistan,Maize,494.0,24.66
+Pakistan,Potatoes,494.0,24.66
+Pakistan,"Rice, paddy",494.0,24.66
+Pakistan,Sorghum,494.0,24.66
+Pakistan,Soybeans,494.0,24.66
+Pakistan,Sweet potatoes,494.0,24.66
+Pakistan,Wheat,494.0,24.66
+Papua New Guinea,Cassava,3142.0,25.27
+Papua New Guinea,Maize,3142.0,25.27
+Papua New Guinea,Potatoes,3142.0,25.27
+Papua New Guinea,"Rice, paddy",3142.0,25.27
+Papua New Guinea,Sorghum,3142.0,25.27
+Papua New Guinea,Sweet potatoes,3142.0,25.27
+Papua New Guinea,Yams,3142.0,25.27
+Peru,Cassava,1738.0,17.26
+Peru,Maize,1738.0,17.26
+Peru,Plantains and others,1738.0,17.26
+Peru,Potatoes,1738.0,17.26
+Peru,"Rice, paddy",1738.0,17.26
+Peru,Sorghum,1738.0,17.26
+Peru,Soybeans,1738.0,17.26
+Peru,Sweet potatoes,1738.0,17.26
+Peru,Wheat,1738.0,17.26
+Poland,Maize,600.0,8.5
+Poland,Potatoes,600.0,8.5
+Poland,Soybeans,600.0,8.5
+Poland,Wheat,600.0,8.5
+Portugal,Maize,854.0,16.24
+Portugal,Potatoes,854.0,16.24
+Portugal,"Rice, paddy",854.0,16.24
+Portugal,Sweet potatoes,854.0,16.24
+Portugal,Wheat,854.0,16.24
+Portugal,Yams,854.0,16.24
+Qatar,Maize,74.0,28.12
+Qatar,Potatoes,74.0,28.12
+Qatar,Wheat,74.0,28.12
+Romania,Maize,637.0,11.9
+Romania,Potatoes,637.0,11.9
+Romania,"Rice, paddy",637.0,11.9
+Romania,Sorghum,637.0,11.9
+Romania,Soybeans,637.0,11.9
+Romania,Wheat,637.0,11.9
+Rwanda,Cassava,1212.0,19.6
+Rwanda,Maize,1212.0,19.6
+Rwanda,Potatoes,1212.0,19.6
+Rwanda,"Rice, paddy",1212.0,19.6
+Rwanda,Sorghum,1212.0,19.6
+Rwanda,Soybeans,1212.0,19.6
+Rwanda,Sweet potatoes,1212.0,19.6
+Rwanda,Wheat,1212.0,19.6
+Rwanda,Yams,1212.0,19.6
+Saudi Arabia,Maize,59.0,26.455
+Saudi Arabia,Potatoes,59.0,26.455
+Saudi Arabia,Sorghum,59.0,26.455
+Saudi Arabia,Wheat,59.0,26.455
+Senegal,Cassava,686.0,25.34
+Senegal,Maize,686.0,25.34
+Senegal,Potatoes,686.0,25.34
+Senegal,"Rice, paddy",686.0,25.34
+Senegal,Sorghum,686.0,25.34
+Senegal,Sweet potatoes,686.0,25.34
+Slovenia,Maize,1162.0,10.74
+Slovenia,Potatoes,1162.0,10.74
+Slovenia,Soybeans,1162.0,10.74
+Slovenia,Wheat,1162.0,10.74
+South Africa,Maize,495.0,17.240000000000002
+South Africa,Potatoes,495.0,17.240000000000002
+South Africa,"Rice, paddy",495.0,17.240000000000002
+South Africa,Sorghum,495.0,17.240000000000002
+South Africa,Soybeans,495.0,17.240000000000002
+South Africa,Sweet potatoes,495.0,17.240000000000002
+South Africa,Wheat,495.0,17.240000000000002
+Spain,Maize,636.0,16.97
+Spain,Potatoes,636.0,16.97
+Spain,"Rice, paddy",636.0,16.97
+Spain,Sorghum,636.0,16.97
+Spain,Soybeans,636.0,16.97
+Spain,Sweet potatoes,636.0,16.97
+Spain,Wheat,636.0,16.97
+Sri Lanka,Cassava,1712.0,26.59
+Sri Lanka,Maize,1712.0,26.59
+Sri Lanka,Plantains and others,1712.0,26.59
+Sri Lanka,Potatoes,1712.0,26.59
+Sri Lanka,"Rice, paddy",1712.0,26.59
+Sri Lanka,Sorghum,1712.0,26.59
+Sri Lanka,Soybeans,1712.0,26.59
+Sri Lanka,Sweet potatoes,1712.0,26.59
+Sudan,Maize,1712.0,28.4
+Sudan,Potatoes,1712.0,28.4
+Sudan,"Rice, paddy",1712.0,28.4
+Sudan,Sorghum,1712.0,28.4
+Sudan,Sweet potatoes,1712.0,28.4
+Sudan,Wheat,1712.0,28.4
+Sudan,Yams,1712.0,28.4
+Suriname,Cassava,2331.0,27.19
+Suriname,Maize,2331.0,27.19
+Suriname,Plantains and others,2331.0,27.19
+Suriname,"Rice, paddy",2331.0,27.19
+Suriname,Soybeans,2331.0,27.19
+Suriname,Sweet potatoes,2331.0,27.19
+Sweden,Potatoes,624.0,7.54
+Sweden,Wheat,624.0,7.54
+Switzerland,Maize,1537.0,7.96
+Switzerland,Potatoes,1537.0,7.96
+Switzerland,Soybeans,1537.0,7.96
+Switzerland,Wheat,1537.0,7.96
+Tajikistan,Maize,691.0,8.61
+Tajikistan,Potatoes,691.0,8.61
+Tajikistan,"Rice, paddy",691.0,8.61
+Tajikistan,Sorghum,691.0,8.61
+Tajikistan,Soybeans,691.0,8.56
+Tajikistan,Wheat,691.0,8.61
+Thailand,Cassava,1622.0,27.8
+Thailand,Maize,1622.0,27.8
+Thailand,Potatoes,1622.0,27.8
+Thailand,"Rice, paddy",1622.0,27.8
+Thailand,Sorghum,1622.0,27.8
+Thailand,Soybeans,1622.0,27.8
+Thailand,Wheat,1622.0,27.8
+Tunisia,Potatoes,207.0,19.64
+Tunisia,Sorghum,207.0,19.64
+Tunisia,Wheat,207.0,19.64
+Turkey,Maize,593.0,14.29
+Turkey,Potatoes,593.0,14.29
+Turkey,"Rice, paddy",593.0,14.29
+Turkey,Sorghum,593.0,14.93
+Turkey,Soybeans,593.0,14.29
+Turkey,Wheat,593.0,14.29
+Uganda,Cassava,1180.0,23.75
+Uganda,Maize,1180.0,23.75
+Uganda,Plantains and others,1180.0,23.75
+Uganda,Potatoes,1180.0,23.75
+Uganda,"Rice, paddy",1180.0,23.75
+Uganda,Sorghum,1180.0,23.75
+Uganda,Soybeans,1180.0,23.75
+Uganda,Sweet potatoes,1180.0,23.75
+Uganda,Wheat,1180.0,23.75
+Ukraine,Maize,565.0,8.42
+Ukraine,Potatoes,565.0,8.42
+Ukraine,"Rice, paddy",565.0,8.42
+Ukraine,Sorghum,565.0,8.42
+Ukraine,Soybeans,565.0,8.42
+Ukraine,Wheat,565.0,8.42
+United Kingdom,Potatoes,1220.0,9.69
+United Kingdom,Wheat,1220.0,9.69
+Uruguay,Maize,1300.0,16.96
+Uruguay,Potatoes,1300.0,16.96
+Uruguay,"Rice, paddy",1300.0,16.96
+Uruguay,Sorghum,1300.0,16.96
+Uruguay,Soybeans,1300.0,16.96
+Uruguay,Sweet potatoes,1300.0,16.96
+Uruguay,Wheat,1300.0,16.96
+Zambia,Cassava,1020.0,20.9
+Zambia,Maize,1020.0,20.9
+Zambia,Potatoes,1020.0,20.9
+Zambia,"Rice, paddy",1020.0,20.9
+Zambia,Sorghum,1020.0,20.9
+Zambia,Soybeans,1020.0,20.9
+Zambia,Sweet potatoes,1020.0,20.9
+Zambia,Wheat,1020.0,20.9
+Zimbabwe,Cassava,657.0,20.75
+Zimbabwe,Maize,657.0,20.75
+Zimbabwe,Potatoes,657.0,20.75
+Zimbabwe,"Rice, paddy",657.0,20.75
+Zimbabwe,Sorghum,657.0,20.75
+Zimbabwe,Soybeans,657.0,20.75
+Zimbabwe,Sweet potatoes,657.0,20.75
+Zimbabwe,Wheat,657.0,20.75

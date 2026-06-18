@@ -1,5 +1,0 @@
-# Notebooks
-
-01_eda_and_features.ipynb
-02_crop_recommendation_model.ipynb
-03_yield_risk_model.ipynb

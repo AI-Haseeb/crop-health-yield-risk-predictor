@@ -1,8 +1,9 @@
-pandas
+fastapi
+uvicorn
+jinja2
+python-multipart
+joblib
 numpy
-matplotlib
-seaborn
+pandas
 scikit-learn
 tensorflow
-flask
-joblib

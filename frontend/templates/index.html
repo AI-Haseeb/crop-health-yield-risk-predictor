@@ -1,9 +1,88 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crop Health & Yield Risk Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
 </head>
 <body>
-    <h1>Crop Health & Yield Risk Predictor</h1>
+    <main class="page-shell">
+        <section class="hero-panel animate-in">
+            <div class="hero-content">
+                <p class="eyebrow">Premium AgriTech Intelligence</p>
+                <h1>Crop Health & Yield Risk Predictor</h1>
+                <p>
+                    Combine soil nutrients, weather conditions, location, and pesticide usage
+                    to generate a crop recommendation and yield-risk decision.
+                </p>
+            </div>
+            <div class="hero-stats">
+                <div>
+                    <span>Model 1</span>
+                    <strong>Crop ANN</strong>
+                </div>
+                <div>
+                    <span>Model 2</span>
+                    <strong>Risk ANN</strong>
+                </div>
+            </div>
+        </section>
+
+        <form class="dashboard-card form-card animate-in delay-1" action="/predict" method="POST">
+            <div class="section-title">
+                <div>
+                    <p class="eyebrow dark">Field Inputs</p>
+                    <h2>Enter Farm Conditions</h2>
+                </div>
+                <span class="soft-pill">Live Prediction</span>
+            </div>
+
+            <div class="form-grid">
+                <label>
+                    <span>Nitrogen N</span>
+                    <input type="number" step="any" name="N" placeholder="Example: 80" required>
+                </label>
+                <label>
+                    <span>Phosphorus P</span>
+                    <input type="number" step="any" name="P" placeholder="Example: 45" required>
+                </label>
+                <label>
+                    <span>Potassium K</span>
+                    <input type="number" step="any" name="K" placeholder="Example: 20" required>
+                </label>
+                <label>
+                    <span>Temperature</span>
+                    <input type="number" step="any" name="temperature" placeholder="Example: 22.5" required>
+                </label>
+                <label>
+                    <span>Humidity</span>
+                    <input type="number" step="any" name="humidity" placeholder="Example: 65" required>
+                </label>
+                <label>
+                    <span>pH</span>
+                    <input type="number" step="any" name="ph" placeholder="Example: 6.3" required>
+                </label>
+                <label>
+                    <span>Rainfall</span>
+                    <input type="number" step="any" name="rainfall" placeholder="Example: 850" required>
+                </label>
+                <label>
+                    <span>Area/Country</span>
+                    <input type="text" name="area" placeholder="Example: Pakistan" required>
+                </label>
+                <label>
+                    <span>Year</span>
+                    <input type="number" name="year" placeholder="Example: 2024" required>
+                </label>
+                <label class="wide-field">
+                    <span>Pesticide use in tonnes</span>
+                    <input type="number" step="any" name="pesticides_tonnes" placeholder="Example: 12000" required>
+                </label>
+            </div>
+
+            <button type="submit">Generate Dashboard Report</button>
+        </form>
+    </main>
 </body>
 </html>

@@ -1,9 +1,160 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Prediction Result</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Prediction Report</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
 </head>
 <body>
-    <h1>Prediction Result</h1>
+    <main class="page-shell">
+        <section class="report-hero animate-in">
+            <div>
+                <p class="eyebrow">AI Prediction Report</p>
+                <h1>{{ result.primary_recommended_crop }}</h1>
+                <p>
+                    Crop recommendation, yield risk, and final decision are generated below from
+                    the trained ML pipeline.
+                </p>
+            </div>
+            <a class="ghost-link" href="/">New Prediction</a>
+        </section>
+
+        <section class="metric-grid animate-in delay-1">
+            <article class="metric-card crop-card">
+                <span>Recommended Crop</span>
+                <strong>{{ result.primary_recommended_crop }}</strong>
+                <small>{{ result.crop_confidence }}% model confidence</small>
+            </article>
+            <article class="metric-card">
+                <span>Yield Risk</span>
+                <strong><span class="badge {{ result.final_risk }}">{{ result.final_risk }}</span></strong>
+                <small>Model 2 risk tier</small>
+            </article>
+            <article class="metric-card">
+                <span>Final Decision</span>
+                <strong><span class="badge {{ result.final_decision }}">{{ result.final_decision }}</span></strong>
+                <small>LOW=GO, MEDIUM=CAUTION, HIGH=HOLD</small>
+            </article>
+            <article class="metric-card">
+                <span>Best Final Crop</span>
+                <strong>{{ result.best_final_crop }}</strong>
+                <small>Selected for this advisory</small>
+            </article>
+        </section>
+
+        <section class="dashboard-card animate-in delay-2">
+            <div class="section-title">
+                <div>
+                    <p class="eyebrow dark">Farmer Advice</p>
+                    <h2>Recommended Action</h2>
+                </div>
+                <span class="badge {{ result.final_decision }}">{{ result.final_decision }}</span>
+            </div>
+            <p class="advice-text">{{ result.final_advice }}</p>
+        </section>
+
+        <section class="split-grid animate-in delay-2">
+            <article class="dashboard-card">
+                <div class="section-title">
+                    <div>
+                        <p class="eyebrow dark">Model 1</p>
+                        <h2>Crop probabilities</h2>
+                    </div>
+                    <span class="soft-pill">Top predictions</span>
+                </div>
+
+                <div class="prediction-list">
+                    {% for item in result.top_3_predictions %}
+                    <div class="prediction-row">
+                        <div>
+                            <span>{{ item.crop }}</span>
+                            <small>Crop recommendation</small>
+                        </div>
+                        <strong>{{ item.confidence }}%</strong>
+                    </div>
+                    {% endfor %}
+                </div>
+            </article>
+
+            <article class="dashboard-card">
+                <div class="section-title">
+                    <div>
+                        <p class="eyebrow dark">Model 2</p>
+                        <h2>Risk probabilities</h2>
+                    </div>
+                    <span class="badge {{ result.final_risk }}">{{ result.final_risk }}</span>
+                </div>
+
+                <div class="prediction-list">
+                    {% for risk, probability in result.risk_probabilities.items() %}
+                    <div class="prediction-row">
+                        <div>
+                            <span><span class="badge {{ risk }}">{{ risk }}</span></span>
+                            <small>Yield risk probability</small>
+                        </div>
+                        <strong>{{ probability }}%</strong>
+                    </div>
+                    {% endfor %}
+                </div>
+            </article>
+        </section>
+
+        <section class="dashboard-card animate-in delay-3">
+            <div class="section-title">
+                <div>
+                    <p class="eyebrow dark">Crop Risk Analysis</p>
+                    <h2>Decision Breakdown</h2>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Crop</th>
+                            <th>Yield Risk</th>
+                            <th>Decision</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in result.crop_risk_analysis %}
+                        <tr>
+                            <td>{{ item.crop }}</td>
+                            <td><span class="badge {{ item.yield_risk }}">{{ item.yield_risk }}</span></td>
+                            <td><span class="badge {{ item.decision }}">{{ item.decision }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="dashboard-card animate-in delay-3">
+            <div class="section-title">
+                <div>
+                    <p class="eyebrow dark">Submitted Input Summary</p>
+                    <h2>Field Conditions Used</h2>
+                </div>
+            </div>
+
+            <div class="summary-grid">
+                <div><span>Nitrogen N</span><strong>{{ input_data.N }}</strong></div>
+                <div><span>Phosphorus P</span><strong>{{ input_data.P }}</strong></div>
+                <div><span>Potassium K</span><strong>{{ input_data.K }}</strong></div>
+                <div><span>Temperature</span><strong>{{ input_data.temperature }}</strong></div>
+                <div><span>Humidity</span><strong>{{ input_data.humidity }}</strong></div>
+                <div><span>pH</span><strong>{{ input_data.ph }}</strong></div>
+                <div><span>Rainfall</span><strong>{{ input_data.rainfall }}</strong></div>
+                <div><span>Area/Country</span><strong>{{ input_data.area }}</strong></div>
+                <div><span>Year</span><strong>{{ input_data.year }}</strong></div>
+                <div><span>Pesticide use</span><strong>{{ input_data.pesticides_tonnes }}</strong></div>
+            </div>
+        </section>
+
+        <div class="result-actions animate-in delay-3">
+            <a class="primary-link" href="/">Run New Prediction</a>
+        </div>
+    </main>
 </body>
 </html>
