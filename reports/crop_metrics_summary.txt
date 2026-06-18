@@ -1,0 +1,38 @@
+============================================================
+CROP RECOMMENDATION ANN — PERFORMANCE SUMMARY
+============================================================
+
+Accuracy  : 0.9909
+Precision : 0.9918
+Recall    : 0.9909
+F1 Score  : 0.9909
+
+Classification Report:
+              precision    recall  f1-score   support
+
+       apple       1.00      1.00      1.00        15
+      banana       1.00      1.00      1.00        15
+   blackgram       1.00      1.00      1.00        15
+    chickpea       1.00      1.00      1.00        15
+     coconut       1.00      1.00      1.00        15
+      coffee       1.00      1.00      1.00        15
+      cotton       0.94      1.00      0.97        15
+      grapes       1.00      1.00      1.00        15
+        jute       0.88      1.00      0.94        15
+ kidneybeans       1.00      1.00      1.00        15
+      lentil       1.00      1.00      1.00        15
+       maize       1.00      0.93      0.97        15
+       mango       1.00      1.00      1.00        15
+   mothbeans       1.00      1.00      1.00        15
+    mungbean       1.00      1.00      1.00        15
+   muskmelon       1.00      1.00      1.00        15
+      orange       1.00      1.00      1.00        15
+      papaya       1.00      1.00      1.00        15
+  pigeonpeas       1.00      1.00      1.00        15
+ pomegranate       1.00      1.00      1.00        15
+        rice       1.00      0.87      0.93        15
+  watermelon       1.00      1.00      1.00        15
+
+    accuracy                           0.99       330
+   macro avg       0.99      0.99      0.99       330
+weighted avg       0.99      0.99      0.99       330

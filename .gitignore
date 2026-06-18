@@ -3,6 +3,15 @@ __pycache__/
 *.pyc
 .env
 .ipynb_checkpoints/
-models/*.h5
-models/*.pt
-models/*.keras
+
+.DS_Store
+__MACOSX/
+._*
+
+*.zip
+*.rar
+
+# large model files only ignore if above 50MB
+# models/*.h5
+# models/*.keras
+# models/*.pt
