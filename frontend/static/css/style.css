@@ -344,11 +344,53 @@ button:hover {
         linear-gradient(145deg, rgba(228, 247, 235, 0.98), rgba(255, 255, 255, 0.94));
 }
 
+.advice-panel {
+    display: grid;
+    gap: 16px;
+}
+
+.advice-summary,
 .advice-text {
     margin: 0;
-    color: #35584c;
-    font-size: 1.06rem;
-    line-height: 1.85;
+    color: #274b40;
+    font-size: 1.04rem;
+    line-height: 1.75;
+    font-weight: 600;
+}
+
+.advice-list {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.advice-list li {
+    position: relative;
+    padding: 12px 14px 12px 42px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: #fbfefd;
+    color: #42675c;
+    line-height: 1.55;
+}
+
+.advice-list li::before {
+    content: "";
+    position: absolute;
+    left: 16px;
+    top: 18px;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--green);
+    box-shadow: 0 0 0 5px rgba(22, 138, 74, 0.12);
+}
+
+.advice-list strong {
+    color: var(--dark);
+    font-weight: 800;
 }
 
 .prediction-list {

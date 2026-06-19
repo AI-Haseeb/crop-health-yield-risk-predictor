@@ -569,43 +569,114 @@ def _make_advice(crop: str, yield_risk: str, decision: str) -> str:
     )
 
 
+def _strip_markdown_advice(text: str) -> str:
+    """Remove simple Markdown markers that look awkward in the dashboard."""
+    cleaned = str(text or "").replace("**", "")
+    cleaned = cleaned.replace("__", "")
+    cleaned = cleaned.replace("`", "")
+    lines = []
+    for line in cleaned.splitlines():
+        line = line.strip()
+        while line.startswith(("- ", "* ")):
+            line = line[2:].strip()
+        if line:
+            lines.append(line)
+    return " ".join(lines).strip()
+
+
+def _fallback_advice_parts(
+    input_data: Dict[str, Any],
+    crop: str,
+    yield_risk: str,
+    decision: str,
+) -> Dict[str, Any]:
+    crop_title = str(crop).title()
+    area = input_data.get("area", "your area")
+    year = input_data.get("year", "the target year")
+    rainfall = input_data.get("rainfall")
+    temperature = input_data.get("temperature")
+    humidity = input_data.get("humidity")
+    ph = input_data.get("ph")
+    pesticides = input_data.get("pesticides_tonnes")
+
+    if decision == "GO":
+        summary = f"{crop_title} looks like a good choice for {area} in {year}."
+        points = [
+            f"The field values look okay for {crop_title}: pH {ph}, temperature {temperature} C, and humidity {humidity}%.",
+            f"Use the {rainfall} mm rainfall value to plan water needs and keep checking the crop.",
+            "Before planting, check the latest local weather and ask a local agriculture expert if needed.",
+        ]
+    elif decision == "CAUTION":
+        summary = f"{crop_title} may work in {area}, but the risk is medium, so be careful."
+        points = [
+            f"The model sees some risk for {crop_title} with rainfall {rainfall} mm and temperature {temperature} C.",
+            f"Keep extra water support ready and review pesticide use of {pesticides} tonnes.",
+            "Before planting, check the weather again and take local expert advice.",
+        ]
+    else:
+        summary = f"{crop_title} is risky in these conditions, so it is better to wait."
+        points = [
+            f"The risk is high with rainfall {rainfall} mm and temperature {temperature} C.",
+            f"Do not spend more on inputs until you review the pesticide plan of {pesticides} tonnes.",
+            "Before planting, check other crop options and talk to a local agriculture expert.",
+        ]
+
+    return {"summary": summary, "points": points[:3]}
+
+def _format_advice_from_parts(parts: Dict[str, Any]) -> str:
+    summary = _strip_markdown_advice(parts.get("summary", ""))
+    points = [_strip_markdown_advice(point) for point in parts.get("points", []) if point]
+    if points:
+        return summary + " " + " ".join(points)
+    return summary
+
+
+def _advice_items(points: list[str]) -> list[Dict[str, str]]:
+    labels = ["Field Focus", "Suggested Action", "Before Planting"]
+    return [
+        {"label": labels[index] if index < len(labels) else "Note", "text": point}
+        for index, point in enumerate(points)
+    ]
+
 def _make_llm_advice(
     input_data: Dict[str, Any],
     crop: str,
     yield_risk: str,
     decision: str,
     fallback_advice: str,
-) -> tuple[str, bool]:
+) -> tuple[Dict[str, Any], bool]:
     """Use Groq only to improve farmer advice. Never let it change ML outputs."""
+    fallback_parts = _fallback_advice_parts(input_data, crop, yield_risk, decision)
     _load_env_file()
     api_key = os.getenv("GROQ_API_KEY")
     if not api_key:
-        return fallback_advice, False
+        return fallback_parts, False
 
     prompt = f"""
-You are an agricultural advisory assistant.
-
-Write a concise, farmer-friendly advisory for the given ML prediction.
+Create a concise farmer advisory from the fixed ML prediction.
+Return ONLY valid JSON. Do not use Markdown, asterisks, headings, or bullet symbols.
 Do not change the crop, yield risk, or final decision.
-Do not claim certainty. Mention that this is decision support and local expert/weather checks still matter.
-Keep it practical and under 90 words.
+Do not claim certainty. Mention that local expert/weather checks still matter.
+Use easy English only. Use short, simple words that a farmer can understand. Make every sentence specific to this crop, risk level, area, rainfall, temperature, pH, and pesticide input.
+Avoid generic repeated advice.
+
+JSON schema:
+{{
+  "summary": "one short easy English sentence, max 18 words",
+  "points": [
+    "easy field sentence with crop/risk/input context, max 18 words",
+    "easy action sentence for this exact risk level, max 18 words",
+    "easy final sentence mentioning local weather or expert check, max 18 words"
+  ]
+}}
 
 Inputs:
-- N: {input_data["N"]}
-- P: {input_data["P"]}
-- K: {input_data["K"]}
-- temperature: {input_data["temperature"]}
-- humidity: {input_data["humidity"]}
-- ph: {input_data["ph"]}
-- rainfall: {input_data["rainfall"]}
-- area: {input_data["area"]}
-- year: {input_data["year"]}
-- pesticides_tonnes: {input_data["pesticides_tonnes"]}
+N={input_data["N"]}, P={input_data["P"]}, K={input_data["K"]}, temperature={input_data["temperature"]}, humidity={input_data["humidity"]}, ph={input_data["ph"]}, rainfall={input_data["rainfall"]}, area={input_data["area"]}, year={input_data["year"]}, pesticides_tonnes={input_data["pesticides_tonnes"]}
 
 ML prediction:
-- recommended_crop: {crop}
-- yield_risk: {yield_risk}
-- final_decision: {decision}
+recommended_crop={crop}
+yield_risk={yield_risk}
+final_decision={decision}
 """.strip()
 
     payload = {
@@ -614,14 +685,14 @@ ML prediction:
             {
                 "role": "system",
                 "content": (
-                    "You produce practical agricultural advice from fixed ML outputs. "
-                    "Never alter the provided crop, risk, or decision."
+                    "You produce clean JSON agricultural advice from fixed ML outputs. "
+                    "Never alter the provided crop, risk, or decision. Never use Markdown."
                 ),
             },
             {"role": "user", "content": prompt},
         ],
-        "temperature": 0.3,
-        "max_tokens": 180,
+        "temperature": 0.2,
+        "max_tokens": 220,
     }
 
     request = urllib.request.Request(
@@ -639,11 +710,29 @@ ML prediction:
     try:
         with urllib.request.urlopen(request, timeout=8) as response:
             response_data = json.loads(response.read().decode("utf-8"))
-        llm_advice = response_data["choices"][0]["message"]["content"].strip()
-        return llm_advice or fallback_advice, bool(llm_advice)
-    except (urllib.error.URLError, urllib.error.HTTPError, KeyError, IndexError, json.JSONDecodeError, TimeoutError):
-        return fallback_advice, False
-
+        content = response_data["choices"][0]["message"]["content"].strip()
+        parsed = json.loads(content)
+        summary = _strip_markdown_advice(parsed.get("summary", ""))
+        points = [
+            _strip_markdown_advice(point)
+            for point in parsed.get("points", [])
+            if _strip_markdown_advice(point)
+        ][:3]
+        if not summary:
+            return fallback_parts, False
+        if not points:
+            points = fallback_parts["points"]
+        return {"summary": summary, "points": points}, True
+    except (
+        urllib.error.URLError,
+        urllib.error.HTTPError,
+        KeyError,
+        IndexError,
+        json.JSONDecodeError,
+        TimeoutError,
+        TypeError,
+    ):
+        return fallback_parts, False
 
 def predict_full_pipeline(input_data: Dict[str, Any]) -> Dict[str, Any]:
     """Run Model 1, feed its crop into Model 2, and return the final result."""
@@ -701,13 +790,15 @@ def predict_full_pipeline(input_data: Dict[str, Any]) -> Dict[str, Any]:
         )
 
     fallback_advice = _make_advice(recommended_crop, yield_risk, decision)
-    advice, llm_advice_used = _make_llm_advice(
+    advice_parts, llm_advice_used = _make_llm_advice(
         input_data=input_data,
         crop=recommended_crop,
         yield_risk=yield_risk,
         decision=decision,
         fallback_advice=fallback_advice,
     )
+    advice = _format_advice_from_parts(advice_parts)
+    advice_items = _advice_items(advice_parts["points"])
 
     return {
         "recommended_crop": recommended_crop,
@@ -726,6 +817,9 @@ def predict_full_pipeline(input_data: Dict[str, Any]) -> Dict[str, Any]:
         "final_risk": yield_risk,
         "final_decision": decision,
         "final_advice": advice,
+        "final_advice_summary": advice_parts["summary"],
+        "final_advice_points": advice_parts["points"],
+        "final_advice_items": advice_items,
         "llm_advice_used": llm_advice_used,
     }
 

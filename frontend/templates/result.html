@@ -51,7 +51,14 @@
                 </div>
                 <span class="badge {{ result.final_decision }}">{{ result.final_decision }}</span>
             </div>
-            <p class="advice-text">{{ result.final_advice }}</p>
+            <div class="advice-panel">
+                <p class="advice-summary">{{ result.final_advice_summary }}</p>
+                <ul class="advice-list">
+                    {% for item in result.final_advice_items %}
+                    <li><strong>{{ item.label }}:</strong> {{ item.text }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
         </section>
 
         <section class="split-grid animate-in delay-2">
