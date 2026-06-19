@@ -45,6 +45,27 @@ The system recommends a crop from soil/weather inputs, predicts yield risk for t
    - `MEDIUM -> CAUTION`
    - `HIGH -> HOLD`
 
+### Shared Weather Input Mapping
+
+The frontend asks for rainfall and temperature only once. The same values are intentionally reused across both models:
+
+```text
+Crop model rainfall      -> crop input rainfall
+Crop model temperature   -> crop input temperature
+Risk model rainfall      -> average_rain_fall_mm_per_year
+Risk model temperature   -> avg_temp
+```
+
+This keeps the user form simple and avoids asking farmers to enter duplicate weather values. In the pipeline, `rainfall` is passed into Model 2 as `average_rain_fall_mm_per_year`, and `temperature` is passed into Model 2 as `avg_temp`.
+
+### Area and Year Inputs
+
+`area` gives the yield-risk model regional context. Yield risk can change by country or region because rainfall behavior, pesticide usage, climate patterns, farming practices, and historical yield trends are different across locations.
+
+`year` gives the yield-risk model time context. For real farmer prediction, enter the target/current farming year, for example `2026` if the crop decision is being made for 2026. Past years are useful only for historical testing or model validation.
+
+Crop recommendation does not use `area` or `year` because it predicts crop suitability from current soil and weather conditions. Yield risk uses `area` and `year` because it is based on historical yield-risk patterns.
+
 ## Required Artifacts
 
 These files must exist:

@@ -300,14 +300,52 @@ def _validate_full_input(input_data: Dict[str, Any]) -> None:
         raise ValueError("rainfall cannot be negative.")
 
 
+def _format_probability_label(value: float) -> str:
+    """Format tiny probabilities without hiding them as plain 0.0%."""
+    value = float(value)
+    if 0 < value < 0.01:
+        return "<0.01"
+    if value >= 99.995:
+        return "100.00"
+    return f"{value:.2f}"
+
+
 def _probabilities_to_dict(classes: np.ndarray, probabilities: np.ndarray) -> Dict[str, float]:
     output = {}
     for label, probability in zip(classes, probabilities):
         label_text = str(label)
         if label_text.upper() in {"LOW", "MEDIUM", "HIGH"}:
             label_text = label_text.upper()
-        output[label_text] = round(float(probability) * 100, 2)
+        # Keep enough precision so top predictions are not lost by early rounding.
+        output[label_text] = round(float(probability) * 100, 6)
     return output
+
+
+def _probability_items(probabilities: Dict[str, float]) -> list[Dict[str, Any]]:
+    return [
+        {
+            "label": label,
+            "probability": probability,
+            "probability_display": _format_probability_label(probability),
+        }
+        for label, probability in probabilities.items()
+    ]
+
+
+def _top_crop_predictions(classes: np.ndarray, probabilities: np.ndarray, limit: int = 3) -> list[Dict[str, Any]]:
+    pairs = sorted(
+        zip(classes, probabilities),
+        key=lambda item: float(item[1]),
+        reverse=True,
+    )[:limit]
+    return [
+        {
+            "crop": str(crop),
+            "confidence": round(float(probability) * 100, 6),
+            "confidence_display": _format_probability_label(float(probability) * 100),
+        }
+        for crop, probability in pairs
+    ]
 
 
 def _model2_item_name(crop_name: str) -> str:
@@ -330,6 +368,10 @@ def predict_crop(input_data: Dict[str, Any]) -> Dict[str, Any]:
     return {
         "recommended_crop": recommended_crop,
         "crop_probabilities": _probabilities_to_dict(
+            artifacts["crop_encoder"].classes_,
+            probabilities,
+        ),
+        "top_3_predictions": _top_crop_predictions(
             artifacts["crop_encoder"].classes_,
             probabilities,
         ),
@@ -614,6 +656,7 @@ def predict_full_pipeline(input_data: Dict[str, Any]) -> Dict[str, Any]:
         "area": input_data["area"],
         "item": recommended_crop,
         "year": input_data["year"],
+        # Keep the form simple: one rainfall/temperature entry feeds both models.
         "average_rain_fall_mm_per_year": input_data["rainfall"],
         "pesticides_tonnes": input_data["pesticides_tonnes"],
         "avg_temp": input_data["temperature"],
@@ -624,15 +667,12 @@ def predict_full_pipeline(input_data: Dict[str, Any]) -> Dict[str, Any]:
     decision = make_decision(yield_risk)
     crop_probabilities = crop_result["crop_probabilities"]
     risk_probabilities = risk_result["risk_probabilities"]
-    top_3_predictions = [
-        {"crop": crop, "confidence": confidence}
-        for crop, confidence in sorted(
-            crop_probabilities.items(),
-            key=lambda item: item[1],
-            reverse=True,
-        )[:3]
-    ]
+    top_3_predictions = crop_result["top_3_predictions"]
     crop_confidence = top_3_predictions[0]["confidence"] if top_3_predictions else 0.0
+    crop_confidence_display = (
+        top_3_predictions[0]["confidence_display"] if top_3_predictions else "0.00"
+    )
+    risk_probability_items = _probability_items(risk_probabilities)
     crop_risk_analysis = []
     for crop_item in top_3_predictions:
         analysis_risk_input = {
@@ -652,6 +692,9 @@ def predict_full_pipeline(input_data: Dict[str, Any]) -> Dict[str, Any]:
                 "crop": crop_item["crop"],
                 "yield_risk": analysis_risk,
                 "risk_confidence": max(analysis_probabilities.values()),
+                "risk_confidence_display": _format_probability_label(
+                    max(analysis_probabilities.values())
+                ),
                 "decision": analysis_decision,
                 "risk_probabilities": analysis_probabilities,
             }
@@ -673,8 +716,10 @@ def predict_full_pipeline(input_data: Dict[str, Any]) -> Dict[str, Any]:
         "advice": advice,
         "crop_probabilities": crop_probabilities,
         "risk_probabilities": risk_probabilities,
+        "risk_probability_items": risk_probability_items,
         "primary_recommended_crop": recommended_crop,
         "crop_confidence": crop_confidence,
+        "crop_confidence_display": crop_confidence_display,
         "top_3_predictions": top_3_predictions,
         "crop_risk_analysis": crop_risk_analysis,
         "best_final_crop": recommended_crop,

@@ -11,6 +11,8 @@ __MACOSX/
 *.zip
 *.rar
 
+deliverables_for_submission/
+
 # large model files only ignore if above 50MB
 # models/*.h5
 # models/*.keras

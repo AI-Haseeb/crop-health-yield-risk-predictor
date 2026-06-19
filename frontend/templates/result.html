@@ -24,7 +24,7 @@
             <article class="metric-card crop-card">
                 <span>Recommended Crop</span>
                 <strong>{{ result.primary_recommended_crop }}</strong>
-                <small>{{ result.crop_confidence }}% model confidence</small>
+                <small>{{ result.crop_confidence_display }}% model confidence</small>
             </article>
             <article class="metric-card">
                 <span>Yield Risk</span>
@@ -71,7 +71,7 @@
                             <span>{{ item.crop }}</span>
                             <small>Crop recommendation</small>
                         </div>
-                        <strong>{{ item.confidence }}%</strong>
+                        <strong>{{ item.confidence_display }}%</strong>
                     </div>
                     {% endfor %}
                 </div>
@@ -87,13 +87,13 @@
                 </div>
 
                 <div class="prediction-list">
-                    {% for risk, probability in result.risk_probabilities.items() %}
+                    {% for item in result.risk_probability_items %}
                     <div class="prediction-row">
                         <div>
-                            <span><span class="badge {{ risk }}">{{ risk }}</span></span>
+                            <span><span class="badge {{ item.label }}">{{ item.label }}</span></span>
                             <small>Yield risk probability</small>
                         </div>
-                        <strong>{{ probability }}%</strong>
+                        <strong>{{ item.probability_display }}%</strong>
                     </div>
                     {% endfor %}
                 </div>
