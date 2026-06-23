@@ -535,6 +535,52 @@ def build_risk_features(
     return risk_features
 
 
+
+
+def _volatility_status(value: float) -> str:
+    """Convert a volatility number into a simple dashboard status."""
+    if value < 0.15:
+        return "Good"
+    if value < 0.50:
+        return "Moderate"
+    return "High"
+
+
+def _risk_reason_items(risk_features: pd.DataFrame) -> list[Dict[str, str]]:
+    """Create easy explanation cards from Model 2 engineered features."""
+    row = risk_features.iloc[0]
+    reason_specs = [
+        (
+            "Rainfall Match",
+            float(row["rainfall_volatility"]),
+            f"Input rainfall {row['average_rain_fall_mm_per_year']:.2f} mm vs crop normal {row['crop_median_rainfall']:.2f} mm.",
+        ),
+        (
+            "Temperature Match",
+            float(row["temp_volatility"]),
+            f"Input temperature {row['avg_temp']:.2f} C vs crop normal {row['crop_median_temp']:.2f} C.",
+        ),
+        (
+            "Pesticide Level",
+            float(row["pesticide_volatility"]),
+            f"Input pesticide {row['pesticides_tonnes']:.2f} tonnes vs crop normal {row['crop_median_pesticides']:.2f} tonnes.",
+        ),
+        (
+            "Overall Weather Score",
+            float(row["weather_volatility_score"]),
+            "Combined rainfall, temperature, and pesticide difference used by the risk model.",
+        ),
+    ]
+    return [
+        {
+            "label": label,
+            "status": _volatility_status(score),
+            "score": _format_probability_label(score * 100),
+            "text": text,
+        }
+        for label, score, text in reason_specs
+    ]
+
 # Runs Model 2 after risk features are built.
 def predict_yield_risk(input_data: Dict[str, Any]) -> Dict[str, Any]:
     """Run Model 2 and return LOW, MEDIUM, or HIGH risk plus probabilities."""
@@ -560,6 +606,7 @@ def predict_yield_risk(input_data: Dict[str, Any]) -> Dict[str, Any]:
         avg_temp=_to_float(input_data, "avg_temp"),
     )
 
+    risk_reason_items = _risk_reason_items(risk_features)  # Human-readable reason cards from engineered features.
     risk_values_scaled = artifacts["risk_scaler"].transform(risk_features)  # Apply same preprocessing used during Model 2 training.
     probabilities = artifacts["risk_model"].predict(risk_values_scaled, verbose=0)[0]  # Get LOW/MEDIUM/HIGH probabilities.
 
@@ -572,6 +619,7 @@ def predict_yield_risk(input_data: Dict[str, Any]) -> Dict[str, Any]:
             artifacts["risk_encoder"].classes_,
             probabilities,
         ),
+        "risk_reason_items": risk_reason_items,
     }
 
 
@@ -775,6 +823,51 @@ final_decision={decision}
     ):
         return fallback_parts, False
 
+
+
+def _smart_action_plan(decision: str) -> list[Dict[str, str]]:
+    """Create a farmer-friendly action checklist for the final decision."""
+    if decision == "GO":
+        return [
+            {"label": "Proceed", "text": "Start planting with normal field monitoring."},
+            {"label": "Watch Weather", "text": "Check rainfall and temperature again this week."},
+            {"label": "Irrigation", "text": "Keep water support ready if rainfall stays low."},
+            {"label": "Field Check", "text": "Inspect crop health after early growth starts."},
+        ]
+    if decision == "CAUTION":
+        return [
+            {"label": "Wait Briefly", "text": "Do not invest fully before checking weather again."},
+            {"label": "Compare Options", "text": "Review the backup crop choices below."},
+            {"label": "Water Plan", "text": "Prepare irrigation support before planting."},
+            {"label": "Expert Check", "text": "Ask a local agriculture expert before final planting."},
+        ]
+    return [
+        {"label": "Hold", "text": "Do not plant this crop immediately."},
+        {"label": "Switch Crop", "text": "Check safer crop options from the comparison cards."},
+        {"label": "Weather Review", "text": "Wait for better rainfall or temperature conditions."},
+        {"label": "Reduce Risk", "text": "Review pesticide, irrigation, and local field advice."},
+    ]
+
+
+def _suitability_score(crop_confidence: float, risk_probabilities: Dict[str, float]) -> int:
+    """Combine crop confidence and risk probabilities into a simple 0-100 score."""
+    low_score = float(risk_probabilities.get("LOW", 0.0))
+    medium_score = float(risk_probabilities.get("MEDIUM", 0.0)) * 0.55
+    high_penalty = float(risk_probabilities.get("HIGH", 0.0)) * 0.75
+    score = (float(crop_confidence) * 0.45) + ((low_score + medium_score) * 0.55) - high_penalty
+    return int(max(0, min(100, round(score))))
+
+
+def _weather_impact_summary(input_data: Dict[str, Any], risk_reason_items: list[Dict[str, str]]) -> str:
+    """Create a short explanation for the AI Farm Intelligence panel."""
+    rainfall = float(input_data.get("rainfall", 0))
+    strongest = max(risk_reason_items, key=lambda item: float(item.get("score", 0)), default=None)
+    if rainfall < 5:
+        return "Live rainfall is very low today, so edit rainfall if you know seasonal or annual field rainfall."
+    if strongest and strongest.get("status") == "High":
+        return f"{strongest['label']} is the biggest risk signal in these conditions."
+    return "Weather and field values are being compared with historical crop reference values."
+
 # Main end-to-end function used by FastAPI and test_pipeline.py.
 def predict_full_pipeline(input_data: Dict[str, Any]) -> Dict[str, Any]:
     """Run Model 1, feed its crop into Model 2, and return the final result."""
@@ -804,6 +897,7 @@ def predict_full_pipeline(input_data: Dict[str, Any]) -> Dict[str, Any]:
         top_3_predictions[0]["confidence_display"] if top_3_predictions else "0.00"
     )
     risk_probability_items = _probability_items(risk_probabilities)
+    risk_reason_items = risk_result.get("risk_reason_items", [])
     crop_risk_analysis = []  # Stores risk result for each top crop prediction.
     for crop_item in top_3_predictions:  # Check Model 2 risk for each of the top crop options.
         analysis_risk_input = {  # Build the base input dictionary for Model 2.
@@ -821,6 +915,8 @@ def predict_full_pipeline(input_data: Dict[str, Any]) -> Dict[str, Any]:
         crop_risk_analysis.append(
             {
                 "crop": crop_item["crop"],
+                "crop_confidence": crop_item["confidence"],
+                "crop_confidence_display": crop_item["confidence_display"],
                 "yield_risk": analysis_risk,
                 "risk_confidence": max(analysis_probabilities.values()),
                 "risk_confidence_display": _format_probability_label(
@@ -841,6 +937,9 @@ def predict_full_pipeline(input_data: Dict[str, Any]) -> Dict[str, Any]:
     )
     advice = _format_advice_from_parts(advice_parts)
     advice_items = _advice_items(advice_parts["points"])
+    suitability_score = _suitability_score(crop_confidence, risk_probabilities)
+    smart_action_plan = _smart_action_plan(decision)
+    weather_impact_summary = _weather_impact_summary(input_data, risk_reason_items)
 
     return {
         "recommended_crop": recommended_crop,
@@ -850,6 +949,10 @@ def predict_full_pipeline(input_data: Dict[str, Any]) -> Dict[str, Any]:
         "crop_probabilities": crop_probabilities,
         "risk_probabilities": risk_probabilities,
         "risk_probability_items": risk_probability_items,
+        "risk_reason_items": risk_reason_items,
+        "suitability_score": suitability_score,
+        "smart_action_plan": smart_action_plan,
+        "weather_impact_summary": weather_impact_summary,
         "primary_recommended_crop": recommended_crop,
         "crop_confidence": crop_confidence,
         "crop_confidence_display": crop_confidence_display,

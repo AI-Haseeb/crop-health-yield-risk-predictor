@@ -7,11 +7,14 @@
     <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
 </head>
 <body>
+    <video class="video-bg" autoplay muted loop playsinline aria-hidden="true">
+        <source src="{{ url_for('static', path='/videos/farm-background.mp4') }}" type="video/mp4">
+    </video>
     <main class="page-shell">
         <section class="hero-panel animate-in">
             <div class="hero-content">
                 <p class="eyebrow">Premium AgriTech Intelligence</p>
-                <h1>Crop Health & Yield Risk Predictor</h1>
+                <h1 class="swing-title">Crop Health & Yield Risk Predictor</h1>
                 <p>
                     Combine soil nutrients, weather conditions, location, and pesticide usage
                     to generate a crop recommendation and yield-risk decision.
@@ -40,6 +43,29 @@
 
             <div class="form-grid">
                 <label>
+                    <span>Area/Country</span>
+                    <input id="areaInput" type="text" name="area" placeholder="Example: Pakistan" required>
+                </label>
+                <label>
+                    <span>City (for auto weather)</span>
+                    <input id="cityInput" type="text" placeholder="Example: Lahore">
+                </label>
+                <label>
+                    <span>Year</span>
+                    <input id="yearInput" type="number" name="year" value="{{ current_year }}" placeholder="Example: {{ current_year }}" required>
+                </label>
+
+                <div class="weather-assist wide-field">
+                    <div>
+                        <p class="eyebrow dark">Live Weather Assist</p>
+                        <h3>Auto-fill weather from city and country</h3>
+                        <p>Fetch current temperature, humidity, rainfall suggestion, and year. Rainfall remains editable.</p>
+                    </div>
+                    <button class="secondary-button" type="button" id="fetchWeatherButton">Fetch Weather</button>
+                    <p class="weather-status" id="weatherStatus">Enter Area/Country and optional City, then fetch weather.</p>
+                </div>
+
+                <label>
                     <span>Nitrogen N (kg/ha)</span>
                     <input type="number" step="any" name="N" placeholder="Example: 80" required>
                 </label>
@@ -51,38 +77,99 @@
                     <span>Potassium K (kg/ha)</span>
                     <input type="number" step="any" name="K" placeholder="Example: 20" required>
                 </label>
+
                 <label>
                     <span>Temperature (C)</span>
-                    <input type="number" step="any" name="temperature" placeholder="Example: 22.5" required>
+                    <input id="temperatureInput" type="number" step="any" name="temperature" placeholder="Example: 22.5" required>
                 </label>
                 <label>
                     <span>Humidity (%)</span>
-                    <input type="number" step="any" name="humidity" placeholder="Example: 65" required>
+                    <input id="humidityInput" type="number" step="any" name="humidity" placeholder="Example: 65" required>
                 </label>
+                <label>
+                    <span>Rainfall (mm)</span>
+                    <input id="rainfallInput" type="number" step="any" name="rainfall" placeholder="Example: 850" required>
+                    <small class="field-hint">Auto weather gives today rainfall suggestion. Edit for seasonal/annual rainfall if known.</small>
+                </label>
+
                 <label>
                     <span>pH (0-14)</span>
                     <input type="number" step="any" name="ph" placeholder="Example: 6.3" required>
                 </label>
-                <label>
-                    <span>Rainfall (mm)</span>
-                    <input type="number" step="any" name="rainfall" placeholder="Example: 850" required>
-                </label>
-                <label>
-                    <span>Area/Country</span>
-                    <input type="text" name="area" placeholder="Example: Pakistan" required>
-                </label>
-                <label>
-                    <span>Year</span>
-                    <input type="number" name="year" placeholder="Example: 2024" required>
-                </label>
-                <label class="wide-field">
+                <label class="span-2">
                     <span>Pesticide use (tonnes)</span>
                     <input type="number" step="any" name="pesticides_tonnes" placeholder="Example: 12000" required>
                 </label>
             </div>
-
             <button type="submit">Generate Dashboard Report</button>
         </form>
     </main>
+    <script>
+        function animateSwingTitle() {
+            document.querySelectorAll(".swing-title").forEach((title) => {
+                const text = title.textContent.trim();
+                title.setAttribute("aria-label", text);
+                title.innerHTML = "";
+                [...text].forEach((char, index) => {
+                    const span = document.createElement("span");
+                    span.textContent = char === " " ? "\u00A0" : char;
+                    span.style.setProperty("--i", index);
+                    title.appendChild(span);
+                });
+
+                const runWave = () => {
+                    title.classList.remove("is-swinging");
+                    void title.offsetWidth;
+                    title.classList.add("is-swinging");
+                };
+
+                runWave();
+                setInterval(runWave, 6200);
+            });
+        }
+        animateSwingTitle();
+        const fetchButton = document.getElementById("fetchWeatherButton");
+        const weatherStatus = document.getElementById("weatherStatus");
+        const areaInput = document.getElementById("areaInput");
+        const cityInput = document.getElementById("cityInput");
+        const temperatureInput = document.getElementById("temperatureInput");
+        const humidityInput = document.getElementById("humidityInput");
+        const rainfallInput = document.getElementById("rainfallInput");
+        const yearInput = document.getElementById("yearInput");
+
+        fetchButton.addEventListener("click", async () => {
+            const locationText = [cityInput.value.trim(), areaInput.value.trim()].filter(Boolean).join(", ");
+            if (!locationText) {
+                weatherStatus.textContent = "Please enter Area/Country or City first.";
+                weatherStatus.className = "weather-status error";
+                return;
+            }
+
+            fetchButton.disabled = true;
+            weatherStatus.textContent = "Fetching live weather...";
+            weatherStatus.className = "weather-status";
+
+            try {
+                const response = await fetch(`/weather?location=${encodeURIComponent(locationText)}`);
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.detail || "Weather lookup failed.");
+                }
+
+                if (data.temperature !== null) temperatureInput.value = data.temperature;
+                if (data.humidity !== null) humidityInput.value = data.humidity;
+                if (data.rainfall !== null) rainfallInput.value = data.rainfall;
+                if (data.year !== null) yearInput.value = data.year;
+
+                weatherStatus.textContent = `Weather loaded for ${data.location_name}, ${data.country}. ${data.note}`;
+                weatherStatus.className = "weather-status success";
+            } catch (error) {
+                weatherStatus.textContent = error.message;
+                weatherStatus.className = "weather-status error";
+            } finally {
+                fetchButton.disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>

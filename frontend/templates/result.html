@@ -4,14 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crop Prediction Report</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
 </head>
 <body>
+    <video class="video-bg" autoplay muted loop playsinline aria-hidden="true">
+        <source src="{{ url_for('static', path='/videos/farm-background.mp4') }}" type="video/mp4">
+    </video>
     <main class="page-shell">
         <section class="report-hero animate-in">
             <div>
                 <p class="eyebrow">AI Prediction Report</p>
-                <h1>{{ result.primary_recommended_crop }}</h1>
+                <h1 class="swing-title">{{ result.primary_recommended_crop }}</h1>
                 <p>
                     Crop recommendation, yield risk, and final decision are generated below from
                     the trained ML pipeline.
@@ -61,6 +65,52 @@
             </div>
         </section>
 
+
+        <section class="dashboard-card intelligence-card animate-in delay-2">
+            <div class="section-title">
+                <div>
+                    <p class="eyebrow dark">AI Farm Intelligence</p>
+                    <h2>Field Decision Command Center</h2>
+                </div>
+                <span class="soft-pill">Explainable AI</span>
+            </div>
+            <div class="intelligence-grid">
+                <article class="score-ring-card">
+                    <div class="score-ring" style="--score: {{ result.suitability_score }};">
+                        <span>{{ result.suitability_score }}</span>
+                    </div>
+                    <h3>Crop Suitability Score</h3>
+                    <p>Combines crop confidence with the yield-risk signal.</p>
+                </article>
+                <article class="risk-meter-card">
+                    <div class="risk-meter-head">
+                        <span>Smart Risk Meter</span>
+                        <strong class="badge {{ result.final_risk }}">{{ result.final_risk }}</strong>
+                    </div>
+                    <div class="risk-meter-track">
+                        <span class="risk-fill {{ result.final_decision }}"></span>
+                    </div>
+                    <p>{{ result.weather_impact_summary }}</p>
+                </article>
+                <article class="action-plan-card">
+                    <span>Next Best Actions</span>
+                    <div class="action-steps">
+                        {% for item in result.smart_action_plan %}
+                        <div><strong>{{ item.label }}</strong><small>{{ item.text }}</small></div>
+                        {% endfor %}
+                    </div>
+                </article>
+            </div>
+            <div class="reason-strip">
+                {% for item in result.risk_reason_items %}
+                <div class="reason-chip {{ item.status }}">
+                    <span>{{ item.label }}</span>
+                    <strong>{{ item.status }}</strong>
+                    <small>{{ item.score }}% difference</small>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
         <section class="split-grid animate-in delay-2">
             <article class="dashboard-card">
                 <div class="section-title">
@@ -110,30 +160,55 @@
         <section class="dashboard-card animate-in delay-3">
             <div class="section-title">
                 <div>
-                    <p class="eyebrow dark">Crop Risk Analysis</p>
-                    <h2>Decision Breakdown</h2>
+                    <p class="eyebrow dark">Crop Choice Radar</p>
+                    <h2>Top Crop Options</h2>
                 </div>
+                <span class="soft-pill">Best Alternatives</span>
             </div>
+            <div class="crop-choice-grid">
+                {% for item in result.crop_risk_analysis %}
+                <article class="crop-choice-card {{ item.decision }}">
+                    <div class="choice-card-top">
+                        <span class="rank-pill">Option {{ loop.index }}</span>
+                        <span class="badge {{ item.decision }}">{{ item.decision }}</span>
+                    </div>
+                    <h3>{{ item.crop }}</h3>
+                    <div class="choice-meta">
+                        <span class="badge {{ item.yield_risk }}">{{ item.yield_risk }} Risk</span>
+                    </div>
+                    <div class="metric-mini-grid">
+                        <div><span>Crop fit</span><strong>{{ item.crop_confidence_display }}%</strong></div>
+                        <div><span>Risk confidence</span><strong>{{ item.risk_confidence_display }}%</strong></div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
 
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Crop</th>
-                            <th>Yield Risk</th>
-                            <th>Decision</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in result.crop_risk_analysis %}
-                        <tr>
-                            <td>{{ item.crop }}</td>
-                            <td><span class="badge {{ item.yield_risk }}">{{ item.yield_risk }}</span></td>
-                            <td><span class="badge {{ item.decision }}">{{ item.decision }}</span></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+        <section class="dashboard-card animate-in delay-3">
+            <div class="section-title">
+                <div>
+                    <p class="eyebrow dark">Location Intelligence</p>
+                    <h2>Same Soil, Different City Weather</h2>
+                </div>
+                <span class="soft-pill">Live Comparison</span>
+            </div>
+            <p class="section-note">This compares the same soil and pesticide inputs across major cities using live weather. Cards are ranked by suitability score, so even if risk stays LOW, the city fit can still be different.</p>
+            <div class="location-grid" id="locationGrid">
+                <article class="location-card loading-card">Loading city weather comparison...</article>
+            </div>
+            <div class="map-panel">
+                <div class="map-panel-head">
+                    <div>
+                        <p class="eyebrow dark">Map View</p>
+                        <h3>City Suitability Map</h3>
+                    </div>
+                    <span class="soft-pill">Risk Circles</span>
+                </div>
+                <p class="section-note">Each circle shows a compared city. Click any circle to see crop, risk, decision, weather, and fit score.</p>
+                <div class="city-map" id="cityMap">
+                    <div class="map-placeholder">Loading city map...</div>
+                </div>
             </div>
         </section>
 
@@ -152,7 +227,7 @@
                 <div><span>Temperature (C)</span><strong>{{ input_data.temperature }}</strong></div>
                 <div><span>Humidity (%)</span><strong>{{ input_data.humidity }}</strong></div>
                 <div><span>pH (0-14)</span><strong>{{ input_data.ph }}</strong></div>
-                <div><span>Rainfall (mm)</span><strong>{{ input_data.rainfall }}</strong></div>
+                <div><span>Rainfall (mm)</span><strong>{{ input_data.rainfall }}</strong><small>Editable weather/rainfall input</small></div>
                 <div><span>Area/Country</span><strong>{{ input_data.area }}</strong></div>
                 <div><span>Year</span><strong>{{ input_data.year }}</strong></div>
                 <div><span>Pesticide use (tonnes)</span><strong>{{ input_data.pesticides_tonnes }}</strong></div>
@@ -163,5 +238,489 @@
             <a class="primary-link" href="/">Run New Prediction</a>
         </div>
     </main>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        function animateSwingTitle() {
+            document.querySelectorAll(".swing-title").forEach((title) => {
+                const text = title.textContent.trim();
+                title.setAttribute("aria-label", text);
+                title.innerHTML = "";
+                [...text].forEach((char, index) => {
+                    const span = document.createElement("span");
+                    span.textContent = char === " " ? "\u00A0" : char;
+                    span.style.setProperty("--i", index);
+                    title.appendChild(span);
+                });
+
+                const runWave = () => {
+                    title.classList.remove("is-swinging");
+                    void title.offsetWidth;
+                    title.classList.add("is-swinging");
+                };
+
+                runWave();
+                setInterval(runWave, 6200);
+            });
+        }
+        animateSwingTitle();
+        const baseInput = {{ input_data | tojson }};
+        const locationGrid = document.getElementById("locationGrid");
+        const cityMapElement = document.getElementById("cityMap");
+        const countryCityCatalog = {
+            pakistan: [
+                { city: "Karachi", country: "Pakistan", coords: [24.8607, 67.0011] },
+                { city: "Lahore", country: "Pakistan", coords: [31.5204, 74.3587] },
+                { city: "Islamabad", country: "Pakistan", coords: [33.6844, 73.0479] },
+                { city: "Multan", country: "Pakistan", coords: [30.1575, 71.5249] },
+                { city: "Peshawar", country: "Pakistan", coords: [34.0151, 71.5249] },
+            ],
+            india: [
+                { city: "Delhi", country: "India", coords: [28.6139, 77.2090] },
+                { city: "Mumbai", country: "India", coords: [19.0760, 72.8777] },
+                { city: "Hyderabad", country: "India", coords: [17.3850, 78.4867] },
+                { city: "Lucknow", country: "India", coords: [26.8467, 80.9462] },
+                { city: "Ahmedabad", country: "India", coords: [23.0225, 72.5714] },
+            ],
+            bangladesh: [
+                { city: "Dhaka", country: "Bangladesh", coords: [23.8103, 90.4125] },
+                { city: "Chittagong", country: "Bangladesh", coords: [22.3569, 91.7832] },
+                { city: "Khulna", country: "Bangladesh", coords: [22.8456, 89.5403] },
+                { city: "Rajshahi", country: "Bangladesh", coords: [24.3745, 88.6042] },
+                { city: "Sylhet", country: "Bangladesh", coords: [24.8949, 91.8687] },
+            ],
+            china: [
+                { city: "Beijing", country: "China", coords: [39.9042, 116.4074] },
+                { city: "Shanghai", country: "China", coords: [31.2304, 121.4737] },
+                { city: "Guangzhou", country: "China", coords: [23.1291, 113.2644] },
+                { city: "Chengdu", country: "China", coords: [30.5728, 104.0668] },
+                { city: "Wuhan", country: "China", coords: [30.5928, 114.3055] },
+            ],
+            brazil: [
+                { city: "Sao Paulo", country: "Brazil", coords: [-23.5558, -46.6396] },
+                { city: "Brasilia", country: "Brazil", coords: [-15.7939, -47.8828] },
+                { city: "Curitiba", country: "Brazil", coords: [-25.4284, -49.2733] },
+                { city: "Goiania", country: "Brazil", coords: [-16.6869, -49.2648] },
+                { city: "Campo Grande", country: "Brazil", coords: [-20.4697, -54.6201] },
+            ],
+            "united states": [
+                { city: "Sacramento", country: "United States", coords: [38.5816, -121.4944] },
+                { city: "Des Moines", country: "United States", coords: [41.5868, -93.6250] },
+                { city: "Fresno", country: "United States", coords: [36.7378, -119.7871] },
+                { city: "Lincoln", country: "United States", coords: [40.8136, -96.7026] },
+                { city: "Lubbock", country: "United States", coords: [33.5779, -101.8552] },
+            ],
+            canada: [
+                { city: "Winnipeg", country: "Canada", coords: [49.8951, -97.1384] },
+                { city: "Regina", country: "Canada", coords: [50.4452, -104.6189] },
+                { city: "Saskatoon", country: "Canada", coords: [52.1579, -106.6702] },
+                { city: "Calgary", country: "Canada", coords: [51.0447, -114.0719] },
+                { city: "London", country: "Canada", coords: [42.9849, -81.2453] },
+            ],
+            mexico: [
+                { city: "Guadalajara", country: "Mexico", coords: [20.6597, -103.3496] },
+                { city: "Culiacan", country: "Mexico", coords: [24.8091, -107.3940] },
+                { city: "Hermosillo", country: "Mexico", coords: [29.0729, -110.9559] },
+                { city: "Puebla", country: "Mexico", coords: [19.0414, -98.2063] },
+                { city: "Merida", country: "Mexico", coords: [20.9674, -89.5926] },
+            ],
+            argentina: [
+                { city: "Buenos Aires", country: "Argentina", coords: [-34.6037, -58.3816] },
+                { city: "Rosario", country: "Argentina", coords: [-32.9442, -60.6505] },
+                { city: "Cordoba", country: "Argentina", coords: [-31.4201, -64.1888] },
+                { city: "Santa Fe", country: "Argentina", coords: [-31.6333, -60.7000] },
+                { city: "Mendoza", country: "Argentina", coords: [-32.8895, -68.8458] },
+            ],
+            australia: [
+                { city: "Perth", country: "Australia", coords: [-31.9523, 115.8613] },
+                { city: "Adelaide", country: "Australia", coords: [-34.9285, 138.6007] },
+                { city: "Melbourne", country: "Australia", coords: [-37.8136, 144.9631] },
+                { city: "Toowoomba", country: "Australia", coords: [-27.5598, 151.9507] },
+                { city: "Wagga Wagga", country: "Australia", coords: [-35.1082, 147.3598] },
+            ],
+            russia: [
+                { city: "Moscow", country: "Russia", coords: [55.7558, 37.6173] },
+                { city: "Krasnodar", country: "Russia", coords: [45.0355, 38.9753] },
+                { city: "Rostov-on-Don", country: "Russia", coords: [47.2357, 39.7015] },
+                { city: "Voronezh", country: "Russia", coords: [51.6608, 39.2003] },
+                { city: "Novosibirsk", country: "Russia", coords: [55.0084, 82.9357] },
+            ],
+            ukraine: [
+                { city: "Kyiv", country: "Ukraine", coords: [50.4501, 30.5234] },
+                { city: "Odesa", country: "Ukraine", coords: [46.4825, 30.7233] },
+                { city: "Dnipro", country: "Ukraine", coords: [48.4647, 35.0462] },
+                { city: "Lviv", country: "Ukraine", coords: [49.8397, 24.0297] },
+                { city: "Poltava", country: "Ukraine", coords: [49.5883, 34.5514] },
+            ],
+            france: [
+                { city: "Paris", country: "France", coords: [48.8566, 2.3522] },
+                { city: "Toulouse", country: "France", coords: [43.6047, 1.4442] },
+                { city: "Bordeaux", country: "France", coords: [44.8378, -0.5792] },
+                { city: "Nantes", country: "France", coords: [47.2184, -1.5536] },
+                { city: "Dijon", country: "France", coords: [47.3220, 5.0415] },
+            ],
+            germany: [
+                { city: "Berlin", country: "Germany", coords: [52.5200, 13.4050] },
+                { city: "Munich", country: "Germany", coords: [48.1351, 11.5820] },
+                { city: "Hanover", country: "Germany", coords: [52.3759, 9.7320] },
+                { city: "Leipzig", country: "Germany", coords: [51.3397, 12.3731] },
+                { city: "Stuttgart", country: "Germany", coords: [48.7758, 9.1829] },
+            ],
+            italy: [
+                { city: "Rome", country: "Italy", coords: [41.9028, 12.4964] },
+                { city: "Bologna", country: "Italy", coords: [44.4949, 11.3426] },
+                { city: "Milan", country: "Italy", coords: [45.4642, 9.1900] },
+                { city: "Naples", country: "Italy", coords: [40.8518, 14.2681] },
+                { city: "Bari", country: "Italy", coords: [41.1171, 16.8719] },
+            ],
+            spain: [
+                { city: "Madrid", country: "Spain", coords: [40.4168, -3.7038] },
+                { city: "Seville", country: "Spain", coords: [37.3891, -5.9845] },
+                { city: "Valencia", country: "Spain", coords: [39.4699, -0.3763] },
+                { city: "Zaragoza", country: "Spain", coords: [41.6488, -0.8891] },
+                { city: "Murcia", country: "Spain", coords: [37.9922, -1.1307] },
+            ],
+            "united kingdom": [
+                { city: "London", country: "United Kingdom", coords: [51.5072, -0.1276] },
+                { city: "Lincoln", country: "United Kingdom", coords: [53.2307, -0.5406] },
+                { city: "Norwich", country: "United Kingdom", coords: [52.6309, 1.2974] },
+                { city: "York", country: "United Kingdom", coords: [53.9600, -1.0873] },
+                { city: "Cambridge", country: "United Kingdom", coords: [52.2053, 0.1218] },
+            ],
+            turkey: [
+                { city: "Ankara", country: "Turkey", coords: [39.9334, 32.8597] },
+                { city: "Konya", country: "Turkey", coords: [37.8746, 32.4932] },
+                { city: "Adana", country: "Turkey", coords: [37.0000, 35.3213] },
+                { city: "Izmir", country: "Turkey", coords: [38.4237, 27.1428] },
+                { city: "Sanliurfa", country: "Turkey", coords: [37.1674, 38.7955] },
+            ],
+            iran: [
+                { city: "Tehran", country: "Iran", coords: [35.6892, 51.3890] },
+                { city: "Shiraz", country: "Iran", coords: [29.5918, 52.5837] },
+                { city: "Isfahan", country: "Iran", coords: [32.6546, 51.6680] },
+                { city: "Tabriz", country: "Iran", coords: [38.0962, 46.2738] },
+                { city: "Mashhad", country: "Iran", coords: [36.2605, 59.6168] },
+            ],
+            egypt: [
+                { city: "Cairo", country: "Egypt", coords: [30.0444, 31.2357] },
+                { city: "Alexandria", country: "Egypt", coords: [31.2001, 29.9187] },
+                { city: "Mansoura", country: "Egypt", coords: [31.0409, 31.3785] },
+                { city: "Asyut", country: "Egypt", coords: [27.1809, 31.1837] },
+                { city: "Luxor", country: "Egypt", coords: [25.6872, 32.6396] },
+            ],
+            "saudi arabia": [
+                { city: "Riyadh", country: "Saudi Arabia", coords: [24.7136, 46.6753] },
+                { city: "Qassim", country: "Saudi Arabia", coords: [26.2078, 43.4837] },
+                { city: "Al Ahsa", country: "Saudi Arabia", coords: [25.3833, 49.5833] },
+                { city: "Jazan", country: "Saudi Arabia", coords: [16.8892, 42.5511] },
+                { city: "Tabuk", country: "Saudi Arabia", coords: [28.3838, 36.5550] },
+            ],
+            "united arab emirates": [
+                { city: "Abu Dhabi", country: "United Arab Emirates", coords: [24.4539, 54.3773] },
+                { city: "Dubai", country: "United Arab Emirates", coords: [25.2048, 55.2708] },
+                { city: "Al Ain", country: "United Arab Emirates", coords: [24.1302, 55.8023] },
+                { city: "Sharjah", country: "United Arab Emirates", coords: [25.3463, 55.4209] },
+                { city: "Ras Al Khaimah", country: "United Arab Emirates", coords: [25.8007, 55.9762] },
+            ],
+            nigeria: [
+                { city: "Lagos", country: "Nigeria", coords: [6.5244, 3.3792] },
+                { city: "Kano", country: "Nigeria", coords: [12.0022, 8.5920] },
+                { city: "Ibadan", country: "Nigeria", coords: [7.3775, 3.9470] },
+                { city: "Kaduna", country: "Nigeria", coords: [10.5105, 7.4165] },
+                { city: "Maiduguri", country: "Nigeria", coords: [11.8333, 13.1500] },
+            ],
+            ethiopia: [
+                { city: "Addis Ababa", country: "Ethiopia", coords: [8.9806, 38.7578] },
+                { city: "Bahir Dar", country: "Ethiopia", coords: [11.5742, 37.3614] },
+                { city: "Hawassa", country: "Ethiopia", coords: [7.0500, 38.4667] },
+                { city: "Mekelle", country: "Ethiopia", coords: [13.4967, 39.4753] },
+                { city: "Jimma", country: "Ethiopia", coords: [7.6667, 36.8333] },
+            ],
+            kenya: [
+                { city: "Nairobi", country: "Kenya", coords: [-1.2864, 36.8172] },
+                { city: "Nakuru", country: "Kenya", coords: [-0.3031, 36.0800] },
+                { city: "Eldoret", country: "Kenya", coords: [0.5143, 35.2698] },
+                { city: "Kisumu", country: "Kenya", coords: [-0.0917, 34.7680] },
+                { city: "Mombasa", country: "Kenya", coords: [-4.0435, 39.6682] },
+            ],
+            "south africa": [
+                { city: "Johannesburg", country: "South Africa", coords: [-26.2041, 28.0473] },
+                { city: "Pretoria", country: "South Africa", coords: [-25.7479, 28.2293] },
+                { city: "Bloemfontein", country: "South Africa", coords: [-29.0852, 26.1596] },
+                { city: "Durban", country: "South Africa", coords: [-29.8587, 31.0218] },
+                { city: "Cape Town", country: "South Africa", coords: [-33.9249, 18.4241] },
+            ],
+            morocco: [
+                { city: "Rabat", country: "Morocco", coords: [34.0209, -6.8416] },
+                { city: "Casablanca", country: "Morocco", coords: [33.5731, -7.5898] },
+                { city: "Marrakesh", country: "Morocco", coords: [31.6295, -7.9811] },
+                { city: "Fes", country: "Morocco", coords: [34.0181, -5.0078] },
+                { city: "Meknes", country: "Morocco", coords: [33.8935, -5.5473] },
+            ],
+            indonesia: [
+                { city: "Jakarta", country: "Indonesia", coords: [-6.2088, 106.8456] },
+                { city: "Surabaya", country: "Indonesia", coords: [-7.2575, 112.7521] },
+                { city: "Bandung", country: "Indonesia", coords: [-6.9175, 107.6191] },
+                { city: "Medan", country: "Indonesia", coords: [3.5952, 98.6722] },
+                { city: "Makassar", country: "Indonesia", coords: [-5.1477, 119.4327] },
+            ],
+            vietnam: [
+                { city: "Hanoi", country: "Vietnam", coords: [21.0278, 105.8342] },
+                { city: "Ho Chi Minh City", country: "Vietnam", coords: [10.8231, 106.6297] },
+                { city: "Can Tho", country: "Vietnam", coords: [10.0452, 105.7469] },
+                { city: "Da Nang", country: "Vietnam", coords: [16.0544, 108.2022] },
+                { city: "Hai Phong", country: "Vietnam", coords: [20.8449, 106.6881] },
+            ],
+            thailand: [
+                { city: "Bangkok", country: "Thailand", coords: [13.7563, 100.5018] },
+                { city: "Chiang Mai", country: "Thailand", coords: [18.7883, 98.9853] },
+                { city: "Nakhon Ratchasima", country: "Thailand", coords: [14.9799, 102.0977] },
+                { city: "Khon Kaen", country: "Thailand", coords: [16.4419, 102.8350] },
+                { city: "Ubon Ratchathani", country: "Thailand", coords: [15.2287, 104.8564] },
+            ],
+            philippines: [
+                { city: "Manila", country: "Philippines", coords: [14.5995, 120.9842] },
+                { city: "Davao", country: "Philippines", coords: [7.1907, 125.4553] },
+                { city: "Cebu", country: "Philippines", coords: [10.3157, 123.8854] },
+                { city: "Iloilo", country: "Philippines", coords: [10.7202, 122.5621] },
+                { city: "Cagayan de Oro", country: "Philippines", coords: [8.4542, 124.6319] },
+            ],
+            malaysia: [
+                { city: "Kuala Lumpur", country: "Malaysia", coords: [3.1390, 101.6869] },
+                { city: "Ipoh", country: "Malaysia", coords: [4.5975, 101.0901] },
+                { city: "Johor Bahru", country: "Malaysia", coords: [1.4927, 103.7414] },
+                { city: "Kota Bharu", country: "Malaysia", coords: [6.1254, 102.2381] },
+                { city: "Alor Setar", country: "Malaysia", coords: [6.1248, 100.3678] },
+            ],
+            japan: [
+                { city: "Tokyo", country: "Japan", coords: [35.6762, 139.6503] },
+                { city: "Sapporo", country: "Japan", coords: [43.0618, 141.3545] },
+                { city: "Niigata", country: "Japan", coords: [37.9161, 139.0364] },
+                { city: "Nagoya", country: "Japan", coords: [35.1815, 136.9066] },
+                { city: "Kumamoto", country: "Japan", coords: [32.8031, 130.7079] },
+            ],
+            "south korea": [
+                { city: "Seoul", country: "South Korea", coords: [37.5665, 126.9780] },
+                { city: "Daegu", country: "South Korea", coords: [35.8714, 128.6014] },
+                { city: "Gwangju", country: "South Korea", coords: [35.1595, 126.8526] },
+                { city: "Jeonju", country: "South Korea", coords: [35.8242, 127.1480] },
+                { city: "Daejeon", country: "South Korea", coords: [36.3504, 127.3845] },
+            ],
+        };
+
+        const countryAliases = {
+            usa: "united states",
+            us: "united states",
+            america: "united states",
+            uk: "united kingdom",
+            uae: "united arab emirates",
+            ksa: "saudi arabia",
+            korea: "south korea",
+        };
+        function normalizeCountryName(value) {
+            return String(value || "").trim().toLowerCase().replace(/\s+/g, " ");
+        }
+
+        function getComparisonLocations(area) {
+            const normalized = normalizeCountryName(area);
+            if (countryCityCatalog[normalized]) return countryCityCatalog[normalized];
+            return [{ city: area, country: area, coords: null }];
+        }
+
+        const comparisonLocations = getComparisonLocations(baseInput.area);
+
+        function weatherTag(weather) {
+            const temp = Number(weather.temperature ?? 0);
+            const humidity = Number(weather.humidity ?? 0);
+            const rain = Number(weather.rainfall ?? 0);
+            if (rain < 1) return { label: "Dry Today", className: "HOLD" };
+            if (temp >= 35) return { label: "Hot", className: "CAUTION" };
+            if (humidity >= 70) return { label: "Humid", className: "CAUTION" };
+            if (temp <= 15) return { label: "Cool", className: "MEDIUM" };
+            return { label: "Stable", className: "GO" };
+        }
+        function decisionColor(decision) {
+            if (decision === "HOLD") return "#c0392b";
+            if (decision === "CAUTION") return "#f59e0b";
+            return "#168a4a";
+        }
+
+        function renderStaticCityMap(points) {
+            const lats = points.map((item) => item.coords[0]);
+            const lngs = points.map((item) => item.coords[1]);
+            const minLat = Math.min(...lats);
+            const maxLat = Math.max(...lats);
+            const minLng = Math.min(...lngs);
+            const maxLng = Math.max(...lngs);
+            const latRange = Math.max(maxLat - minLat, 0.1);
+            const lngRange = Math.max(maxLng - minLng, 0.1);
+            const markers = points.map((item, index) => {
+                const { city, weather, prediction } = item;
+                const score = Number(prediction.suitability_score || 0);
+                const color = decisionColor(prediction.final_decision);
+                const x = 70 + ((item.coords[1] - minLng) / lngRange) * 660;
+                const y = 300 - ((item.coords[0] - minLat) / latRange) * 220;
+                const radius = Math.max(13, Math.min(24, 11 + score / 8));
+                return `
+                    <g class="static-map-point" tabindex="0">
+                        <circle cx="${x}" cy="${y}" r="${radius + 8}" fill="${color}" opacity="0.12"></circle>
+                        <circle cx="${x}" cy="${y}" r="${radius}" fill="${color}" opacity="0.78"></circle>
+                        <text x="${x}" y="${y - radius - 12}" text-anchor="middle" class="static-map-label">${index === 0 ? "Best: " : ""}${city}</text>
+                        <title>${city}\nCrop: ${prediction.primary_recommended_crop}\nRisk: ${prediction.final_risk}\nDecision: ${prediction.final_decision}\nFit score: ${score}\nTemp: ${weather.temperature} C, Rain: ${weather.rainfall} mm</title>
+                    </g>`;
+            }).join("");
+
+            cityMapElement.innerHTML = `
+                <svg class="static-city-map" viewBox="0 0 800 360" role="img" aria-label="City suitability map">
+                    <defs>
+                        <linearGradient id="mapFieldGradient" x1="0" x2="1" y1="0" y2="1">
+                            <stop offset="0" stop-color="#e9faef"></stop>
+                            <stop offset="1" stop-color="#c9efd8"></stop>
+                        </linearGradient>
+                    </defs>
+                    <rect width="800" height="360" rx="18" fill="url(#mapFieldGradient)"></rect>
+                    <path d="M40 285 C160 220 250 260 370 205 S620 135 760 190" fill="none" stroke="#8bd2a7" stroke-width="18" opacity="0.45"></path>
+                    <path d="M30 120 C170 70 265 130 390 92 S635 70 770 118" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.70"></path>
+                    <path d="M92 328 L730 42" stroke="#ffffff" stroke-width="2" opacity="0.42"></path>
+                    <path d="M150 335 L760 108" stroke="#77c999" stroke-width="2" opacity="0.35"></path>
+                    ${markers}
+                </svg>`;
+        }
+
+        function renderCityMap(cityResults) {
+            if (!cityMapElement) return;
+            const points = cityResults.filter((item) => !item.error && item.coords);
+            if (points.length === 0) {
+                cityMapElement.innerHTML = `<div class="map-placeholder">Map unavailable. City comparison cards are still shown above.</div>`;
+                return;
+            }
+
+            if (!window.L) {
+                renderStaticCityMap(points);
+                return;
+            }
+
+            try {
+                cityMapElement.innerHTML = "";
+                const map = L.map(cityMapElement, { scrollWheelZoom: false, zoomControl: true });
+                L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                    maxZoom: 18,
+                    attribution: "&copy; OpenStreetMap contributors",
+                }).addTo(map);
+
+                const bounds = [];
+                points.forEach((item, index) => {
+                    const { city, weather, prediction } = item;
+                    const score = Number(prediction.suitability_score || 0);
+                    const color = decisionColor(prediction.final_decision);
+                    const coords = item.coords;
+                    bounds.push(coords);
+
+                    L.circleMarker(coords, {
+                        radius: Math.max(10, Math.min(18, 9 + score / 10)),
+                        color,
+                        fillColor: color,
+                        fillOpacity: 0.42,
+                        weight: 3,
+                    })
+                        .addTo(map)
+                        .bindTooltip(`${index === 0 ? "Best: " : ""}${city}`, {
+                            permanent: true,
+                            direction: "top",
+                            className: "city-map-label",
+                        })
+                        .bindPopup(`
+                            <strong>${city}</strong><br>
+                            Crop: ${prediction.primary_recommended_crop}<br>
+                            Risk: ${prediction.final_risk}<br>
+                            Decision: ${prediction.final_decision}<br>
+                            Fit score: ${score}<br>
+                            Temp: ${weather.temperature} C, Rain: ${weather.rainfall} mm
+                        `);
+                });
+
+                map.fitBounds(bounds, { padding: [36, 36], maxZoom: 7 });
+                setTimeout(() => map.invalidateSize(), 120);
+            } catch (error) {
+                renderStaticCityMap(points);
+            }
+        }
+
+
+        async function buildLocationComparison() {
+            const cityResults = [];
+            for (const location of comparisonLocations) {
+                try {
+                    const city = location.city;
+                    const country = location.country || baseInput.area;
+                    const weatherResponse = await fetch(`/weather?location=${encodeURIComponent(`${city}, ${country}`)}`);
+                    const weather = await weatherResponse.json();
+                    if (!weatherResponse.ok) throw new Error(weather.detail || "Weather unavailable");
+
+                    const cityInput = {
+                        ...baseInput,
+                        temperature: weather.temperature ?? baseInput.temperature,
+                        humidity: weather.humidity ?? baseInput.humidity,
+                        rainfall: weather.rainfall ?? baseInput.rainfall,
+                        year: weather.year ?? baseInput.year,
+                    };
+
+                    const predictionResponse = await fetch("/api/predict", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(cityInput),
+                    });
+                    const prediction = await predictionResponse.json();
+                    if (!predictionResponse.ok) throw new Error(prediction.detail || "Prediction unavailable");
+
+                    cityResults.push({ city, country, coords: location.coords, weather, prediction, tag: weatherTag(weather) });
+                } catch (error) {
+                    cityResults.push({ city: location.city, country: location.country || baseInput.area, coords: location.coords, error });
+                }
+            }
+
+            cityResults.sort((a, b) => (b.prediction?.suitability_score || 0) - (a.prediction?.suitability_score || 0));
+            locationGrid.innerHTML = cityResults.map((item, index) => {
+                if (item.error) {
+                    return `<article class="location-card"><span>${item.city}</span><h3>Weather unavailable</h3><p>${item.error.message}</p></article>`;
+                }
+                const { city, weather, prediction, tag } = item;
+                return `<article class="location-card ${prediction.final_decision}">
+                    <div class="location-topline">
+                        <span class="rank-pill">${index === 0 ? "Best city match" : `Option ${index + 1}`}</span>
+                        <span class="badge ${prediction.final_decision}">${prediction.final_decision}</span>
+                    </div>
+                    <div class="location-main">
+                        <div>
+                            <h3 class="city-name">${city}</h3>
+                            <p class="crop-line">Recommended crop: <strong>${prediction.primary_recommended_crop}</strong></p>
+                        </div>
+                        <div class="mini-score"><strong>${prediction.suitability_score}</strong><small>fit score</small></div>
+                    </div>
+                    <div class="choice-meta">
+                        <b class="badge ${tag.className}">${tag.label}</b>
+                        <b class="badge ${prediction.final_risk}">${prediction.final_risk} Risk</b>
+                    </div>
+                    <div class="weather-stats">
+                        <div><span>Temp</span><strong>${weather.temperature} C</strong></div>
+                        <div><span>Humidity</span><strong>${weather.humidity}%</strong></div>
+                        <div><span>Rain</span><strong>${weather.rainfall} mm</strong></div>
+                    </div>
+                    <p class="confidence-line">Crop confidence ${prediction.crop_confidence_display}%</p>
+                </article>`;
+            }).join("");
+            renderCityMap(cityResults);
+        }
+
+        if (comparisonLocations.length > 1) {
+            const countryLabel = comparisonLocations[0].country;
+            document.querySelectorAll(".section-note").forEach((note) => {
+                if (note.textContent.includes("same soil and pesticide inputs")) {
+                    note.textContent = `This compares the same soil and pesticide inputs across major cities in ${countryLabel} using live weather. Cards and map circles are ranked by suitability score.`;
+                }
+            });
+        }
+
+        buildLocationComparison();
+    </script>
 </body>
 </html>
